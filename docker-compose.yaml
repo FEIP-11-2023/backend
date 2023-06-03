@@ -47,5 +47,12 @@ services:
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       DB_HOST: db
       DB_DATABASE: feip
-  
+    expose:
+      - 80    
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`api.mrfox131.ru`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls=true"
+      - "traefik.http.routers.backend.tls.certresolver=le"
       
