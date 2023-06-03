@@ -30,12 +30,4 @@ pipeline {
             }
         }
     }
-    post {
-//         success {
-//             notifyEvents message: "#News_Backend 🥃 Deploy Succeed 😍💕😋😎️", token: '7yi9o1VBd3mz-JP2JhQOICo3Y5zgPHGk'
-//         }
-//         failure {
-//             notifyEvents message: '#News_Backend Deploy Failed  😩😑😖😳', token: '7yi9o1VBd3mz-JP2JhQOICo3Y5zgPHGk'
-//         }
-    }
 }
