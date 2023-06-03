@@ -16,7 +16,6 @@ from app.auth.utils import get_jwt_for_user
 
 from app.auth.models import User
 from app.database import get_db
-from app.pay.utils import provide_wallet
 
 import bcrypt
 
