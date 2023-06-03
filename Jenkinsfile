@@ -17,6 +17,7 @@ pipeline {
                 sh """
                     gpg --batch --import $gpg_secret
                     gpg --import-ownertrust $gpg_trust
+                    git secret reveal -p '$gpg_passphrase'
                 """
                 echo "Deploying and Building..."
 //                 notifyEvents message: "#News_Backend 🛠 Building New Container...", token: '7yi9o1VBd3mz-JP2JhQOICo3Y5zgPHGk'
