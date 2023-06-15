@@ -108,10 +108,9 @@ async def refresh(token: schemas.RefreshToken, db: AsyncSession = Depends(get_db
 
 @router.get("/get_user", response_model=schemas.User)
 async def get_user(user: User = Depends(deps.user_by_token(User, login_required=True))):
-    print(user)
     return user
 
 
-@router.get("/get_user_optional")
+@router.get("/get_user_optional", response_model=schemas.User)
 async def get_user(user: User = Depends(deps.user_by_token(User, login_required=False))):
     return user
