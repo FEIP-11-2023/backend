@@ -48,6 +48,7 @@ services:
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       DB_HOST: db
       DB_DATABASE: feip
+    restart: always
     expose:
       - 80    
     labels:
