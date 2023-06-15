@@ -32,3 +32,13 @@ class RegisterRequest(ORJSONModel):
 
 class RefreshToken(ORJSONModel):
     token: str
+
+
+class User(ORJSONModel):
+    username: str
+    email: str
+    str: any
+    blocked: bool
+
+    class Config:
+        orm_mode = True

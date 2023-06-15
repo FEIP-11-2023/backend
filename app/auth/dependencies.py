@@ -20,7 +20,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/token", auto_error=F
 
 
 def user_by_token(extended_class: Type[User] = User, login_required: bool = True) -> \
-Callable[[str], Coroutine[Any, Any, Any | None]]:
+Callable[[str, AsyncSession], Coroutine[Any, Any, Any | None]]:
     async def closure(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)):
         if token is None:
             if login_required:
