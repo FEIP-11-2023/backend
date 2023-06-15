@@ -2,7 +2,6 @@ import fastapi
 import uvicorn
 from app.auth.router import router as auth_subrouter
 from app import exceptions
-import exceptions
 from fastapi.responses import JSONResponse
 from fastapi import Request
 
