@@ -111,6 +111,6 @@ async def get_user(user: User = Depends(deps.user_by_token(User, login_required=
     return user
 
 
-@router.get("/get_user_optional", response_model=schemas.User)
+@router.get("/get_user_optional", response_model=Optional[schemas.User])
 async def get_user(user: User = Depends(deps.user_by_token(User, login_required=False))):
     return user
