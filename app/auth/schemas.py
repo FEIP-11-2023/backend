@@ -37,7 +37,7 @@ class RefreshToken(ORJSONModel):
 class User(ORJSONModel):
     username: str
     email: str
-    str: any
+    role: str
     blocked: bool
 
     class Config:
