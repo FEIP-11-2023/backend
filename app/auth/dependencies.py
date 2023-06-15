@@ -36,7 +36,7 @@ Callable[[str, AsyncSession], Coroutine[Any, Any, Any | None]]:
         except Exception:
             raise exceptions.Unauthorized()
 
-        user = (await db.execute(select(extended_class).filter(extended_class.id == uuid.UUID(token_data.get("id"))).limit(1))).one()
+        user = (await db.execute(select(extended_class).filter(extended_class.id == uuid.UUID(token_data.get("id"))).limit(1))).one()[0]
 
         return user
     return closure
