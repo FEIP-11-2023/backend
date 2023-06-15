@@ -12,5 +12,5 @@ def get_jwt_for_user(user: models.User, timedelta: datetime.timedelta = datetime
         "id": str(user.id),
         "username": user.username,
         "email": user.email,
-        "role": str(user.role.key),
+        "role": str(user.role),
     }, AuthConfig().jwt_key, algorithm=AuthConfig().jwt_algorithm)

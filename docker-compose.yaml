@@ -15,7 +15,7 @@ services:
       POSTGRES_DB: feip
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
-      - ./docker/pgdata:/var/lib/postgresql/data/pgdata
+      - PGDATA_FEIP:/var/lib/postgresql/data/pgdata
     networks:
       - local
     healthcheck:
