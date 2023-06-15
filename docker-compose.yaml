@@ -57,4 +57,5 @@ services:
       - "traefik.http.routers.backend.entrypoints=websecure"
       - "traefik.http.routers.backend.tls=true"
       - "traefik.http.routers.backend.tls.certresolver=le"
-      
+volumes:
+  PGDATA_FEIP:
