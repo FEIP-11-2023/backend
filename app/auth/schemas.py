@@ -1,6 +1,7 @@
 import re
 from typing import Optional
 
+from app.auth import models
 from app.models import ORJSONModel
 from pydantic import validator
 
@@ -37,7 +38,7 @@ class RefreshToken(ORJSONModel):
 class User(ORJSONModel):
     username: str
     email: str
-    role: str
+    role: models.Role
     blocked: bool
 
     class Config:
