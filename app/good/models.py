@@ -29,6 +29,7 @@ class Good(Base, TableNameAndIDMixin):
     brand_id: Mapped[UUID] = mapped_column(ForeignKey(Brand.id))
     color_id: Mapped[Optional[UUID]] = mapped_column(ForeignKey(Color.id))
     cost: Mapped[NUMERIC] = mapped_column(NUMERIC(10, 2))
+    remainder: Mapped[int]
 
     sales: Mapped["Sale"] = relationship("Sale")
     brand: Mapped[Brand] = relationship(Brand)
