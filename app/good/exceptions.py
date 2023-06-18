@@ -24,6 +24,15 @@ class EntityNotFound(ExceptionDescribed):
         self.code = "GO-0003"
         self.status_code = 404
         self.description = {
-            "en": f"Enity with id \"{id}\" not found",
-            "ru": f"Сущность с id \"{id}\" не найдена"
+            "en": f'Enity with id "{id}" not found',
+            "ru": f'Сущность с id "{id}" не найдена',
         }
+
+
+class EntityAlreadyExists(ExceptionDescribed):
+    code = "GO-0004"
+    status_code = 400
+    description = {
+        "en": "Entity already exists",
+        "ru": "Сущность уже существует"
+    }

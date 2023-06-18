@@ -8,6 +8,7 @@ from app.good import schemas
 import app.good.models as models
 from app.auth import dependencies as AuthDeps
 from app.auth.models import User as AuthUser
+from app.good import service
 
 router = APIRouter()
 
@@ -47,14 +48,7 @@ async def create_brand(
     request: schemas.CreateBrand,
     db: Annotated[AsyncSession, Depends(get_db)],
 ):
-    brand = models.Brand(
-        name=request.name
-    )
-    db.add(brand)
-    await db.flush()
-    await db.refresh(brand)
-
-    return brand.id
+    return await service.create_brand(request.name)
 
 
 @router.patch(
