@@ -45,7 +45,7 @@ class Good(Base, TableNameAndIDMixin, CreatedAtMixin, UpdatedAtMixin):
     category: Mapped[Category] = relationship(Category)
     color: Mapped[Optional[Color]] = relationship(Color)
 
-    sizes: Mapped[List["Size"]] = relationship("Size", back_populates="Size.good")
+    sizes: Mapped[List["Size"]] = relationship("Size", back_populates="good")
 
 
 class Sale(Base, TableNameAndIDMixin, CreatedAtMixin, UpdatedAtMixin):
