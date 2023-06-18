@@ -33,7 +33,7 @@ class TableNameAndIDMixin(object):
         return cls.__name__.lower()
 
     id: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, server_default=text("gen_random_uuid()")
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
 
 
