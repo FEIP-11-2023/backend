@@ -29,20 +29,21 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
 @router.post("/register")
-async def register(request: schemas.RegisterRequest, db: Annotated[AsyncSession, Depends(get_db)]):
-    await service.create_user(
-        request.username,
-        request.password,
-        request.email,
-        db
-    )
+async def register(
+    request: schemas.RegisterRequest, db: Annotated[AsyncSession, Depends(get_db)]
+):
+    await service.create_user(request.username, request.password, request.email, db)
     return
 
 
 @router.post("/token")
-async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
+async def login(
+    form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)
+):
     user: Optional[Tuple[models.User]] = (
-        await db.execute(select(models.User).filter(models.User.username == form_data.username))
+        await db.execute(
+            select(models.User).filter(models.User.username == form_data.username)
+        )
     ).one_or_none()
 
     if user is None:
@@ -50,7 +51,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSessi
     user: models.User = user[0]
     if user.blocked:
         raise exceptions.UserBlocked
-    if not bcrypt.checkpw(form_data.password.encode('utf-8'), user.password_hash):
+    if not bcrypt.checkpw(form_data.password.encode("utf-8"), user.password_hash):
         raise exceptions.InvalidCredentialsException()
 
     token = get_jwt_for_user(user)
@@ -59,7 +60,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSessi
     refresh_token = models.RefreshToken(
         user_id=user.id,
         token=refresh_token_data,
-        valid_till=datetime.datetime.utcnow() + datetime.timedelta(days = 30),
+        valid_till=datetime.datetime.utcnow() + datetime.timedelta(days=30),
     )
 
     db.add(refresh_token)
@@ -75,7 +76,9 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSessi
 
 @router.post("/refresh")
 async def refresh(token: schemas.RefreshToken, db: AsyncSession = Depends(get_db)):
-    token_query = await db.execute(select(models.RefreshToken).filter(models.RefreshToken.token == token.token))
+    token_query = await db.execute(
+        select(models.RefreshToken).filter(models.RefreshToken.token == token.token)
+    )
     token_from_db: Optional[List[models.RefreshToken]] = token_query.one_or_none()
 
     if token_from_db is None:
@@ -112,5 +115,7 @@ async def get_user(user: User = Depends(deps.user_by_token(User, login_required=
 
 
 @router.get("/get_user_optional", response_model=Optional[schemas.User])
-async def get_user(user: User = Depends(deps.user_by_token(User, login_required=False))):
+async def get_user(
+    user: User = Depends(deps.user_by_token(User, login_required=False))
+):
     return user

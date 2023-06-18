@@ -24,11 +24,12 @@ class User(Base, TableNameAndIDMixin):
 
     blocked: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
-    refresh_tokens: Mapped[List["RefreshToken"]] = relationship(back_populates='user')
+    refresh_tokens: Mapped[List["RefreshToken"]] = relationship(back_populates="user")
+
 
 class RefreshToken(Base, TableNameAndIDMixin):
     user_id: Mapped[UUID] = mapped_column(ForeignKey("user.id"), nullable=False)
-    user: Mapped[User] = relationship(back_populates='refresh_tokens', lazy='joined')
+    user: Mapped[User] = relationship(back_populates="refresh_tokens", lazy="joined")
     token: Mapped[str] = mapped_column(String, unique=True, nullable=False)
     created_at: Mapped[DateTime] = mapped_column(DateTime, server_default=func.now())
     valid_till: Mapped[DateTime] = mapped_column(DateTime, nullable=False)

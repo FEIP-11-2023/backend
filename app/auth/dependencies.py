@@ -20,16 +20,21 @@ from app.database import get_db
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/token", auto_error=False)
 
 
-def user_by_token(extended_class: Type[User] = User, login_required: bool = True) -> \
-Callable[[str, AsyncSession], Coroutine[Any, Any, Any | None]]:
-    async def closure(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)):
+def user_by_token(
+    extended_class: Type[User] = User, login_required: bool = True
+) -> Callable[[str, AsyncSession], Coroutine[Any, Any, Any | None]]:
+    async def closure(
+        token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)
+    ):
         if token is None:
             if login_required:
                 raise exceptions.Unauthorized()
             else:
                 return None
         try:
-            token_data = jwt.decode(token, AuthConfig().jwt_key, algorithms=[AuthConfig().jwt_algorithm])
+            token_data = jwt.decode(
+                token, AuthConfig().jwt_key, algorithms=[AuthConfig().jwt_algorithm]
+            )
         except jwt.ExpiredSignatureError:
             raise exceptions.TokenExpired()
         except jwt.JWTError:
@@ -37,9 +42,16 @@ Callable[[str, AsyncSession], Coroutine[Any, Any, Any | None]]:
         except Exception:
             raise exceptions.Unauthorized()
 
-        user = (await db.execute(select(extended_class).filter(extended_class.id == uuid.UUID(token_data.get("id"))).limit(1))).one()[0]
+        user = (
+            await db.execute(
+                select(extended_class)
+                .filter(extended_class.id == uuid.UUID(token_data.get("id")))
+                .limit(1)
+            )
+        ).one()[0]
 
         return user
+
     return closure
 
 

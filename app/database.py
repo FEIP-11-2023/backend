@@ -32,14 +32,18 @@ class TableNameAndIDMixin(object):
     def __tablename__(cls):
         return cls.__name__.lower()
 
-    id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
 
 
 class CreatedAtMixin(object):
-    created_at: Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    created_at: Mapped[DateTime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
 
 
 class UpdatedAtMixin(object):
-    updated_at: Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_onupdate=func.now(), server_default=func.now())
-
-
+    updated_at: Mapped[DateTime] = mapped_column(
+        DateTime(timezone=True), server_onupdate=func.now(), server_default=func.now()
+    )

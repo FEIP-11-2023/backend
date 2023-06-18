@@ -1,7 +1,17 @@
 import enum
 from typing import Optional, List
 
-from sqlalchemy import String, ForeignKey, LargeBinary, DateTime, func, Boolean, Enum, UniqueConstraint, NUMERIC
+from sqlalchemy import (
+    String,
+    ForeignKey,
+    LargeBinary,
+    DateTime,
+    func,
+    Boolean,
+    Enum,
+    UniqueConstraint,
+    NUMERIC,
+)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import Mapped

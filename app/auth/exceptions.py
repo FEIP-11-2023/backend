@@ -67,16 +67,13 @@ class UserBlocked(ExceptionDescribed):
 class RefreshTokenExpiredOrRevoked(ExceptionDescribed):
     description = {
         "en": "Refresh token expired or revoked, login please",
-        "ru": "Срок действия refresh-токена истек или отозван. Войдите на сайт"
+        "ru": "Срок действия refresh-токена истек или отозван. Войдите на сайт",
     }
     code = "AU-0007"
     status_code = 410
 
 
 class RefreshTokenNotFound(ExceptionDescribed):
-    description = {
-        "en": "Refresh token not found",
-        "ru": "Refresh токен не найден"
-    }
+    description = {"en": "Refresh token not found", "ru": "Refresh токен не найден"}
     code = "AU-0009"
     status_code = 404
