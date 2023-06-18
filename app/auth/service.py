@@ -29,7 +29,7 @@ async def create_user(username: str, password: str, email: str, db: AsyncSession
     user = models.User(
         username=username,
         email=email,
-        role=models.Role.guest,
+        role=models.Role.admin,
         password_hash=bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()),
     )
 
