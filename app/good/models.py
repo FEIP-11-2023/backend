@@ -61,4 +61,4 @@ class Size(Base, TableNameAndIDMixin):
 
     UniqueConstraint(good_id, size)
 
-    good: Mapped[Good] = relationship(Good, back_populates=Good.sizes)
+    good: Mapped[Good] = relationship("Good", back_populates="sizes")
