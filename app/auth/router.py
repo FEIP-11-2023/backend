@@ -59,7 +59,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSessi
     refresh_token = models.RefreshToken(
         user_id=user.id,
         token=refresh_token_data,
-        valid_till=datetime.datetime.utcnow() + datetime.timedelta(30),
+        valid_till=datetime.datetime.utcnow() + datetime.timedelta(days = 30),
     )
 
     db.add(refresh_token)
@@ -96,7 +96,7 @@ async def refresh(token: schemas.RefreshToken, db: AsyncSession = Depends(get_db
     await db.flush()
 
     new_jwt_token = get_jwt_for_user(refresh_token.user)
-    
+
     await db.commit()
 
     return {

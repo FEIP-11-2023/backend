@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.auth import exceptions
 from app.auth.models import User
 from app.auth.config import AuthConfig
+from app.auth import models
 import uuid
 
 from fastapi import Depends
@@ -48,3 +49,13 @@ def auth_required(func):
         return await func(*args, **kwargs)
 
     return wrapper
+
+
+def admin_required(func, role: models.Role):
+    @wraps(func)
+    async def wrapper(user: User = Depends(user_by_token()), *args, **kwargs):
+        if user.role != role:
+            raise exceptions.PermissionDenied
+        return await func(*args, **kwargs)
+
+    return

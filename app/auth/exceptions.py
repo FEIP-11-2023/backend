@@ -28,6 +28,15 @@ class TokenExpired(ExceptionDescribed):
     status_code = 401
 
 
+class PermissionDenied(ExceptionDescribed):
+    description = {
+        "en": "Insufficient permissions",
+        "ru": "Недостаточно прав",
+    }
+    code = "AU-0008"
+    status_code = 401
+
+
 class Unauthorized(ExceptionDescribed):
     description = {
         "en": "Unauthorized",
@@ -69,3 +78,5 @@ class RefreshTokenNotFound(ExceptionDescribed):
         "en": "Refresh token not found",
         "ru": "Refresh токен не найден"
     }
+    code = "AU-0009"
+    status_code = 404
