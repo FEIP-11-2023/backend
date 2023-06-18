@@ -54,9 +54,7 @@ async def create_brand(
     await db.flush()
     await db.refresh(brand)
 
-    result = brand.id
-
-    return result
+    return brand.id
 
 
 @router.patch(
