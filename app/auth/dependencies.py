@@ -70,4 +70,4 @@ def admin_required(func):
             raise exceptions.PermissionDenied
         return await func(*args, **kwargs)
 
-    return
+    return wrapper
