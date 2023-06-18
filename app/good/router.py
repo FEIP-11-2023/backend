@@ -52,7 +52,6 @@ async def create_brand(
     )
     db.add(brand)
     await db.commit()
-    await db.flush()
 
     return brand.id
 
