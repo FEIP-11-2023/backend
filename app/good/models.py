@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
-from app.database import Base, TableNameAndIDMixin
+from app.database import Base, TableNameAndIDMixin, CreatedAtMixin, UpdatedAtMixin
 
 
 class Brand(Base, TableNameAndIDMixin):
@@ -22,14 +22,13 @@ class Color(Base, TableNameAndIDMixin):
     name: Mapped[str] = mapped_column(unique=True)
 
 
-class Good(Base, TableNameAndIDMixin):
+class Good(Base, TableNameAndIDMixin, CreatedAtMixin, UpdatedAtMixin):
     name: Mapped[str] = mapped_column(unique=True)
     description: Mapped[str]
     category_id: Mapped[UUID] = mapped_column(ForeignKey(Category.id))
     brand_id: Mapped[UUID] = mapped_column(ForeignKey(Brand.id))
     color_id: Mapped[Optional[UUID]] = mapped_column(ForeignKey(Color.id))
     cost: Mapped[NUMERIC] = mapped_column(NUMERIC(10, 2))
-    remainder: Mapped[int]
 
     sales: Mapped["Sale"] = relationship("Sale")
     brand: Mapped[Brand] = relationship(Brand)
@@ -39,14 +38,16 @@ class Good(Base, TableNameAndIDMixin):
     sizes: Mapped[List["Size"]] = relationship("Size", back_populates="Size.good")
 
 
-class Sale(Base, TableNameAndIDMixin):
+class Sale(Base, TableNameAndIDMixin, CreatedAtMixin, UpdatedAtMixin):
     good_id: Mapped[UUID] = mapped_column(ForeignKey(Good.id))
     size: Mapped[int]
+    active: Mapped[bool] = mapped_column(default=True)
 
 
 class Size(Base, TableNameAndIDMixin):
     good_id: Mapped[UUID] = mapped_column(ForeignKey(Good.id))
     size: Mapped[str] = mapped_column()
+    remainder: Mapped[int]
 
     UniqueConstraint(good_id, size)
 
