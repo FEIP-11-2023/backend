@@ -1,6 +1,7 @@
 import fastapi
 import uvicorn
-from app.auth.router import router as auth_subrouter
+from app.auth.router import router as AuthSubrouter
+from app.good.router import router as GoodSubrouter
 from app import exceptions
 from fastapi.responses import JSONResponse
 from fastapi import Request
@@ -8,7 +9,8 @@ from fastapi import Request
 app = fastapi.FastAPI()
 
 
-app.include_router(auth_subrouter, prefix="/api/v1/auth")
+app.include_router(AuthSubrouter, prefix="/api/v1/auth")
+app.include_router(GoodSubrouter, prefix="/api/v1/goods")
 
 
 @app.exception_handler(exceptions.ExceptionDescribed)
