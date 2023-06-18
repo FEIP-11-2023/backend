@@ -63,11 +63,6 @@ def auth_required(func):
     return wrapper
 
 
-def admin_required(func):
-    @wraps(func)
-    async def wrapper(user: User = Depends(user_by_token()), *args, **kwargs):
-        if user.role != models.Role.admin:
-            raise exceptions.PermissionDenied
-        return await func(*args, **kwargs)
-
-    return wrapper
+async def admin_required(user: User = Depends(user_by_token()), *args, **kwargs):
+    if user.role != models.Role.admin:
+        raise exceptions.PermissionDenied
