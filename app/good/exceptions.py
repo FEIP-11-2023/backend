@@ -17,3 +17,13 @@ class DeltaCannotBeNegative(ExceptionDescribed):
         "en": "Delta must be non-negative",
         "ru": "Изменение должно быть неотрицательным",
     }
+
+
+class EntityNotFound(ExceptionDescribed):
+    def __init__(self, id: str):
+        self.code = "GO-0003"
+        self.status_code = 404
+        self.description = {
+            "en": f"Enity with id \"{id}\" not found",
+            "ru": f"Сущность с id \"{id}\" не найдена"
+        }
