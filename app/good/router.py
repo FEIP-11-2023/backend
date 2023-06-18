@@ -51,9 +51,12 @@ async def create_brand(
         name=request.name
     )
     db.add(brand)
-    await db.commit()
+    await db.flush()
+    await db.refresh(brand)
 
-    return brand.id
+    result = brand.id
+
+    return result
 
 
 @router.patch(
