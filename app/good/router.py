@@ -1,3 +1,4 @@
+import uuid
 from typing import Annotated
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -10,7 +11,7 @@ from app.auth.models import User as AuthUser
 router = APIRouter()
 
 
-@router.post("/create_good", dependencies=[Depends(AuthDeps.admin_required)], tags=["goods", "admin"])
+@router.post("/create_good", dependencies=[Depends(AuthDeps.admin_required)], tags=["goods", "admin"], response_model=uuid.UUID)
 async def create_good(
     request: schemas.CreateGood,
     db: Annotated[AsyncSession, Depends(get_db)],
@@ -26,7 +27,7 @@ async def update_good(
     pass
 
 
-@router.post("/create_brand", dependencies=[Depends(AuthDeps.admin_required)], tags=["goods", "admin"])
+@router.post("/create_brand", dependencies=[Depends(AuthDeps.admin_required)], tags=["goods", "admin"], response_model=uuid.UUID)
 async def create_brand(
     request: schemas.CreateBrand,
     db: Annotated[AsyncSession, Depends(get_db)],
@@ -42,7 +43,7 @@ async def update_brand(
     pass
 
 
-@router.post("/create_category", dependencies=[Depends(AuthDeps.admin_required)], tags=["goods", "admin"])
+@router.post("/create_category", dependencies=[Depends(AuthDeps.admin_required)], tags=["goods", "admin"], response_model=uuid.UUID)
 async def create_category(
     request: schemas.CreateBrand,
     db: Annotated[AsyncSession, Depends(get_db)],
@@ -54,5 +55,37 @@ async def create_category(
 async def update_category(
     request: schemas.UpdateCategory,
     db: Annotated[AsyncSession, Depends(get_db)],
+):
+    pass
+
+
+@router.post("/create_color", dependencies=[Depends(AuthDeps.admin_required)], tags=["goods", "admin"])
+async def create_color(
+        request: schemas.CreateColor,
+        db: Annotated[AsyncSession, Depends(get_db)]
+):
+    pass
+
+
+@router.patch("/update_color", dependencies=[Depends(AuthDeps.admin_required)], tags=["goods", "admin"])
+async def update_color(
+        request: schemas.UpdateBrand,
+        db: Annotated[AsyncSession, Depends(get_db)]
+):
+    pass
+
+
+@router.post("/create_sale", dependencies=[Depends(AuthDeps.admin_required)], tags=["goods", "admin"])
+async def create_sale(
+        request: schemas.CreateSale,
+        db: Annotated[AsyncSession, Depends(get_db)]
+):
+    pass
+
+
+@router.patch("/switch_sale", dependencies=[Depends(AuthDeps.admin_required)], tags=["goods", "admin"])
+async def switch_sale(
+        request: schemas.SwitchSale,
+        db: Annotated[AsyncSession, Depends(get_db)]
 ):
     pass
