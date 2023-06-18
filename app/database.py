@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import DateTime, func
+from sqlalchemy import DateTime, func, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, Session
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.declarative import declared_attr
@@ -33,7 +33,7 @@ class TableNameAndIDMixin(object):
         return cls.__name__.lower()
 
     id: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+        UUID(as_uuid=True), primary_key=True, server_default=text("uuid_generate_v4()")
     )
 
 
