@@ -104,3 +104,6 @@ class Brand(ORJSONModel):
 class Category(ORJSONModel):
     id: uuid.UUID
     name: str
+    
+    class Config:
+        orm_mode = True
