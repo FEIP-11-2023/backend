@@ -199,4 +199,4 @@ async def update_category(id: uuid.UUID, name: str, db: AsyncSession):
 async def get_colors(db: AsyncSession) -> List[schemas.Color]:
     colors = (await db.execute(select(models.Color))).fetchall()
     
-    return list(map(schemas.Color.from_orm, colors[0]))
+    return list(map(lambda x: schemas.Color.from_orm(x[0]), colors))
