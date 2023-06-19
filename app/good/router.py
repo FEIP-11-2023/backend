@@ -110,7 +110,7 @@ async def update_color(
     return await service.update_color(request.color_id, request.name, db)
 
 
-@router.get("/get_colots", tags=["goods", "user"], response_model=List[schemas.Color])
+@router.get("/get_colors", tags=["goods", "user"], response_model=List[schemas.Color])
 async def get_colors(db: Annotated[AsyncSession, Depends(get_db)]):
     return await service.get_colors(db)
 

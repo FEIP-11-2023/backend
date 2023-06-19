@@ -44,7 +44,7 @@ async def update_brand(id: uuid.UUID, name: str, db: AsyncSession):
     brand = await get_brand_by_id(id, db)
     if brand is None:
         raise exceptions.EntityNotFound
-    brand.name = name
+    brand[0].name = name
     await db.commit()
 
 
@@ -90,7 +90,7 @@ async def update_color(id: uuid.UUID, name: str, db: AsyncSession):
 
     print(color)
 
-    color.name = name
+    color[0].name = name
 
     await db.commit()
 
@@ -194,8 +194,13 @@ async def update_category(id: uuid.UUID, name: str, db: AsyncSession):
     category = await get_category_by_name(name, db)
     if category is not None and category.id != id:
         raise exceptions.EntityAlreadyExists
-
-    category.name = name
+    
+    category = await get_category_by_id(id, db)
+    
+    if category is None:
+        raise exceptions.EntityNotFound(str(id))
+    
+    category[0].name = name
 
     await db.commit()
 
