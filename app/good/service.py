@@ -84,6 +84,10 @@ async def update_color(id: uuid.UUID, name: str, db: AsyncSession):
         raise exceptions.EntityAlreadyExists
 
     color = await get_color_by_id(id, db)
+
+    if color is None:
+        raise exceptions.EntityNotFound(str(id))
+
     color.name = name
 
     await db.commit()
@@ -198,5 +202,5 @@ async def update_category(id: uuid.UUID, name: str, db: AsyncSession):
 
 async def get_colors(db: AsyncSession) -> List[schemas.Color]:
     colors = (await db.execute(select(models.Color))).fetchall()
-    
+
     return list(map(lambda x: schemas.Color.from_orm(x[0]), colors))

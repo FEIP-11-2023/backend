@@ -88,6 +88,6 @@ class SwitchSale(ORJSONModel):
 class Color(ORJSONModel):
     id: uuid.UUID
     name: str
-    
+
     class Config:
         orm_mode = True
