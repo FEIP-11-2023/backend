@@ -22,7 +22,7 @@ services:
       retries: 3
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.minio_console.rule=Host(`minio_console.mrfox131.ru`)"
+      - "traefik.http.routers.minio_console.rule=Host(`minio-console.mrfox131.ru`)"
       - "traefik.http.routers.minio_console.entrypoints=websecure"
       - "traefik.http.routers.minio_console.tls=true"
       - "traefik.http.routers.minio_console.tls.certresolver=le"
