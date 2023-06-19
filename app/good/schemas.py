@@ -99,3 +99,8 @@ class Brand(ORJSONModel):
 
     class Config:
         orm_mode = True
+
+
+class Category(ORJSONModel):
+    id: uuid.UUID
+    name: str
