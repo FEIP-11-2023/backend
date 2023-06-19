@@ -96,7 +96,7 @@ async def update_category(
 async def create_color(
     request: schemas.CreateColor, db: Annotated[AsyncSession, Depends(get_db)]
 ):
-    pass
+    return await service.create_color(request.name, db)
 
 
 @router.patch(
@@ -105,9 +105,9 @@ async def create_color(
     tags=["goods", "admin"],
 )
 async def update_color(
-    request: schemas.UpdateBrand, db: Annotated[AsyncSession, Depends(get_db)]
+    request: schemas.UpdateColor, db: Annotated[AsyncSession, Depends(get_db)]
 ):
-    pass
+    return await service.update_color(request.color_id, request.name, db)
 
 
 @router.post(
