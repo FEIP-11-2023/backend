@@ -156,7 +156,7 @@ async def switch_sale(
 @router.get(
     "/get_sales",
     dependencies=[Depends(AuthDeps.admin_required)],
-    tags=["goods"],
+    tags=["goods", "admin"],
     response_model=List[schemas.Sale]
 )
 async def get_sales(
