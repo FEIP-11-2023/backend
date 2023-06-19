@@ -48,7 +48,7 @@ async def create_brand(
     request: schemas.CreateBrand,
     db: Annotated[AsyncSession, Depends(get_db)],
 ):
-    return await service.create_brand(request.name)
+    return await service.create_brand(request.name, db)
 
 
 @router.patch(
@@ -60,7 +60,7 @@ async def update_brand(
     request: schemas.UpdateBrand,
     db: Annotated[AsyncSession, Depends(get_db)],
 ):
-    pass
+    return await service.update_brand(request.brand_id, request.name, db)
 
 
 @router.post(
