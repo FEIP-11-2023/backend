@@ -8,7 +8,7 @@ networks:
 services:
   minio:
     image: quay.io/minio/minio
-    command: server --console-address ":443" --a /data
+    command: server --console-address ":443" /data
     environment:
       MINIO_ROOT_USER: feip
       MINIO_ROOT_PASSWORD: minio_password
