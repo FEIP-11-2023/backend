@@ -175,3 +175,15 @@ async def create_category(name: str, db: AsyncSession):
     await db.refresh(category)
 
     return category.id
+
+
+async def update_category(id: uuid.UUID, name: str, db: AsyncSession):
+    category = await get_category_by_name(name, db)
+    if category is not None and category.id != id:
+        raise exceptions.EntityAlreadyExists
+
+    category.name = name
+
+    await db.commit()
+
+    return

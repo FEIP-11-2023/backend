@@ -70,10 +70,10 @@ async def update_brand(
     response_model=uuid.UUID,
 )
 async def create_category(
-    request: schemas.CreateBrand,
+    request: schemas.CreateCategory,
     db: Annotated[AsyncSession, Depends(get_db)],
 ):
-    pass
+    return await service.create_category(request.name, db)
 
 
 @router.patch(
@@ -85,7 +85,7 @@ async def update_category(
     request: schemas.UpdateCategory,
     db: Annotated[AsyncSession, Depends(get_db)],
 ):
-    pass
+    await service.update_category(request.category_id, request.name, db)
 
 
 @router.post(
