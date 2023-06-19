@@ -88,6 +88,8 @@ async def update_color(id: uuid.UUID, name: str, db: AsyncSession):
     if color is None:
         raise exceptions.EntityNotFound(str(id))
 
+    print(color)
+
     color.name = name
 
     await db.commit()
@@ -110,7 +112,7 @@ async def get_sale_by_id(id: uuid.UUID, db: AsyncSession) -> Optional[models.Sal
 
 
 async def get_sales_by_good_id(
-    good_id: uuid.UUID, db: AsyncSession
+        good_id: uuid.UUID, db: AsyncSession
 ) -> List[models.Sale]:
     good = await get_good_by_id(good_id, db)
     if good is None:
@@ -151,7 +153,7 @@ async def switch_sale(sale_id: uuid.UUID, state: bool, db: AsyncSession):
 
 
 async def get_category_by_id(
-    id: uuid.UUID, db: AsyncSession
+        id: uuid.UUID, db: AsyncSession
 ) -> Optional[models.Category]:
     return (
         await db.execute(
@@ -161,7 +163,7 @@ async def get_category_by_id(
 
 
 async def get_category_by_name(
-    name: str, db: AsyncSession
+        name: str, db: AsyncSession
 ) -> Optional[models.Category]:
     return (
         await db.execute(
