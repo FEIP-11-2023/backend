@@ -129,4 +129,6 @@ async def create_sale(
 async def switch_sale(
     request: schemas.SwitchSale, db: Annotated[AsyncSession, Depends(get_db)]
 ):
-    return await service.switch_sale(sale_id=request.sale_id, state=request.active, db=db)
+    return await service.switch_sale(
+        sale_id=request.sale_id, state=request.active, db=db
+    )

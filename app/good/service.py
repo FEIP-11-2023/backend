@@ -139,3 +139,39 @@ async def switch_sale(sale_id: uuid.UUID, state: bool, db: AsyncSession):
     sale.active = state
 
     await db.commit()
+
+
+async def get_category_by_id(
+    id: uuid.UUID, db: AsyncSession
+) -> Optional[models.Category]:
+    return (
+        await db.execute(
+            select(models.Category).with_for_update().filter(models.Category.id == id)
+        )
+    ).one_or_none()
+
+
+async def get_category_by_name(
+    name: str, db: AsyncSession
+) -> Optional[models.Category]:
+    return (
+        await db.execute(
+            select(models.Category)
+            .with_for_update()
+            .filter(models.Category.name == name)
+        )
+    ).one_or_none()
+
+
+async def create_category(name: str, db: AsyncSession):
+    category = await get_category_by_name(name, db)
+    if category is not None:
+        raise exceptions.EntityAlreadyExists
+
+    category = models.Category(name=name)
+
+    db.add(category)
+    await db.flush()
+    await db.refresh(category)
+
+    return category.id
