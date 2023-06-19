@@ -32,7 +32,4 @@ class EntityNotFound(ExceptionDescribed):
 class EntityAlreadyExists(ExceptionDescribed):
     code = "GO-0004"
     status_code = 400
-    description = {
-        "en": "Entity already exists",
-        "ru": "Сущность уже существует"
-    }
+    description = {"en": "Entity already exists", "ru": "Сущность уже существует"}

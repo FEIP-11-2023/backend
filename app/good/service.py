@@ -47,11 +47,15 @@ async def update_brand(id: uuid.UUID, name: str, db: AsyncSession):
 
 
 async def get_color_by_id(id: uuid.UUID, db: AsyncSession) -> Optional[models.Color]:
-    return (await db.execute(select(models.Color).filter(models.Color.id == id))).one_or_none()
+    return (
+        await db.execute(select(models.Color).filter(models.Color.id == id))
+    ).one_or_none()
 
 
 async def get_color_by_name(name: str, db: AsyncSession) -> Optional[models.Color]:
-    return (await db.execute(select(models.Color).filter(models.Color.name == name))).one_or_none()
+    return (
+        await db.execute(select(models.Color).filter(models.Color.name == name))
+    ).one_or_none()
 
 
 async def create_color(name: str, db: AsyncSession) -> uuid.UUID:
@@ -60,9 +64,7 @@ async def create_color(name: str, db: AsyncSession) -> uuid.UUID:
     if color is not None:
         raise exceptions.EntityAlreadyExists
 
-    color = models.Color(
-        name=name
-    )
+    color = models.Color(name=name)
 
     db.add(color)
     await db.flush()
@@ -85,14 +87,24 @@ async def update_color(id: uuid.UUID, name: str, db: AsyncSession):
 
 
 async def get_good_by_id(id: uuid.UUID, db: AsyncSession) -> Optional[models.Good]:
-    return (await db.execute(select(models.Good).with_for_update().filter(models.Good.id == id))).one_or_none()
+    return (
+        await db.execute(
+            select(models.Good).with_for_update().filter(models.Good.id == id)
+        )
+    ).one_or_none()
 
 
 async def get_sale_by_id(id: uuid.UUID, db: AsyncSession) -> Optional[models.Sale]:
-    return (await db.execute(select(models.Sale).with_for_update().filter(models.Sale.id == id))).one_or_none()
+    return (
+        await db.execute(
+            select(models.Sale).with_for_update().filter(models.Sale.id == id)
+        )
+    ).one_or_none()
 
 
-async def get_sales_by_good_id(good_id: uuid.UUID, db: AsyncSession) -> List[models.Sale]:
+async def get_sales_by_good_id(
+    good_id: uuid.UUID, db: AsyncSession
+) -> List[models.Sale]:
     good = await get_good_by_id(good_id, db)
     if good is None:
         raise exceptions.EntityNotFound(str(good_id))
@@ -103,10 +115,7 @@ async def get_sales_by_good_id(good_id: uuid.UUID, db: AsyncSession) -> List[mod
 async def create_sale(good_id: uuid.UUID, size: int, db: AsyncSession) -> uuid.UUID:
     current_sales = await get_sales_by_good_id(good_id, db)
 
-    new_sale = models.Sale(
-        good_id=good_id,
-        size=size
-    )
+    new_sale = models.Sale(good_id=good_id, size=size)
 
     for sale in current_sales:
         if sale.active:
@@ -116,3 +125,17 @@ async def create_sale(good_id: uuid.UUID, size: int, db: AsyncSession) -> uuid.U
     await db.flush()
     await db.refresh(new_sale)
     return new_sale.id
+
+
+async def switch_sale(sale_id: uuid.UUID, state: bool, db: AsyncSession):
+    sale = await get_sale_by_id(sale_id, db)
+    if state:
+        current_sales = await get_sales_by_good_id(sale.good_id, db)
+        for current_sale in current_sales:
+            if current_sale.active:
+                current_sale.active = False
+                break
+
+    sale.active = state
+
+    await db.commit()
