@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional
+from typing import Optional, List
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
@@ -82,3 +82,37 @@ async def update_color(id: uuid.UUID, name: str, db: AsyncSession):
     color.name = name
 
     await db.commit()
+
+
+async def get_good_by_id(id: uuid.UUID, db: AsyncSession) -> Optional[models.Good]:
+    return (await db.execute(select(models.Good).with_for_update().filter(models.Good.id == id))).one_or_none()
+
+
+async def get_sale_by_id(id: uuid.UUID, db: AsyncSession) -> Optional[models.Sale]:
+    return (await db.execute(select(models.Sale).with_for_update().filter(models.Sale.id == id))).one_or_none()
+
+
+async def get_sales_by_good_id(good_id: uuid.UUID, db: AsyncSession) -> List[models.Sale]:
+    good = await get_good_by_id(good_id, db)
+    if good is None:
+        raise exceptions.EntityNotFound(str(good_id))
+
+    return good.sales
+
+
+async def create_sale(good_id: uuid.UUID, size: int, db: AsyncSession) -> uuid.UUID:
+    current_sales = await get_sales_by_good_id(good_id, db)
+
+    new_sale = models.Sale(
+        good_id=good_id,
+        size=size
+    )
+
+    for sale in current_sales:
+        if sale.active:
+            new_sale.active = False
+
+    db.add(new_sale)
+    await db.flush()
+    await db.refresh(new_sale)
+    return new_sale.id
