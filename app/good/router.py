@@ -118,7 +118,7 @@ async def update_color(
 async def create_sale(
     request: schemas.CreateSale, db: Annotated[AsyncSession, Depends(get_db)]
 ):
-    pass
+    return await service.create_sale(request.good_id, request.size, db)
 
 
 @router.patch(
