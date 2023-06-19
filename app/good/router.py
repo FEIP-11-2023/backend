@@ -14,7 +14,7 @@ router = APIRouter()
 
 
 @router.post(
-    "/create_good",
+    "/good",
     dependencies=[Depends(AuthDeps.admin_required)],
     tags=["goods", "admin"],
     response_model=uuid.UUID,
@@ -27,7 +27,7 @@ async def create_good(
 
 
 @router.patch(
-    "/update_good",
+    "/good",
     dependencies=[Depends(AuthDeps.admin_required)],
     tags=["goods", "admin"],
 )
@@ -39,7 +39,7 @@ async def update_good(
 
 
 @router.post(
-    "/create_brand",
+    "/brand",
     dependencies=[Depends(AuthDeps.admin_required)],
     tags=["goods", "admin"],
     response_model=uuid.UUID,
@@ -52,7 +52,7 @@ async def create_brand(
 
 
 @router.patch(
-    "/update_brand",
+    "/brand",
     dependencies=[Depends(AuthDeps.admin_required)],
     tags=["goods", "admin"],
 )
@@ -63,13 +63,13 @@ async def update_brand(
     return await service.update_brand(request.brand_id, request.name, db)
 
 
-@router.get("/update_brand", tags=["goods"], response_model=List[schemas.Brand])
+@router.get("/brands", tags=["goods"], response_model=List[schemas.Brand])
 async def get_brands(db: Annotated[AsyncSession, Depends(get_db)]):
     return await service.get_brands(db)
 
 
 @router.post(
-    "/create_category",
+    "/category",
     dependencies=[Depends(AuthDeps.admin_required)],
     tags=["goods", "admin"],
     response_model=uuid.UUID,
@@ -82,7 +82,7 @@ async def create_category(
 
 
 @router.patch(
-    "/update_category",
+    "/category",
     dependencies=[Depends(AuthDeps.admin_required)],
     tags=["goods", "admin"],
 )
@@ -94,7 +94,7 @@ async def update_category(
 
 
 @router.post(
-    "/create_color",
+    "/color",
     dependencies=[Depends(AuthDeps.admin_required)],
     tags=["goods", "admin"],
 )
@@ -105,7 +105,7 @@ async def create_color(
 
 
 @router.patch(
-    "/update_color",
+    "/color",
     dependencies=[Depends(AuthDeps.admin_required)],
     tags=["goods", "admin"],
 )
@@ -115,13 +115,13 @@ async def update_color(
     return await service.update_color(request.color_id, request.name, db)
 
 
-@router.get("/get_colors", tags=["goods", "user"], response_model=List[schemas.Color])
+@router.get("/color", tags=["goods", "user"], response_model=List[schemas.Color])
 async def get_colors(db: Annotated[AsyncSession, Depends(get_db)]):
     return await service.get_colors(db)
 
 
 @router.post(
-    "/create_sale",
+    "/sale",
     dependencies=[Depends(AuthDeps.admin_required)],
     tags=["goods", "admin"],
 )
