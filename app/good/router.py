@@ -93,6 +93,15 @@ async def update_category(
     await service.update_category(request.category_id, request.name, db)
 
 
+@router.get(
+    "/category",
+    tags=["goods"],
+    response_model=List[schemas.Category]
+)
+async def get_categories(db: Annotated[AsyncSession, Depends(get_db)]):
+    return await service.get_categories(db)
+
+
 @router.post(
     "/color",
     dependencies=[Depends(AuthDeps.admin_required)],
