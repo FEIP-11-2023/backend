@@ -38,7 +38,7 @@ async def create_brand(name: str, db: AsyncSession):
 
 async def update_brand(id: uuid.UUID, name: str, db: AsyncSession):
     brand = await get_brand_by_name(name, db)
-    if brand is not None and brand.id != id:
+    if brand is not None and brand[0].id != id:
         raise exceptions.EntityAlreadyExists
 
     brand = await get_brand_by_id(id, db)
@@ -86,7 +86,7 @@ async def create_color(name: str, db: AsyncSession) -> uuid.UUID:
 async def update_color(id: uuid.UUID, name: str, db: AsyncSession):
     color_by_name = await get_color_by_name(name, db)
 
-    if color_by_name is not None and color_by_name.id != id:
+    if color_by_name is not None and color_by_name[0].id != id:
         raise exceptions.EntityAlreadyExists
 
     color = await get_color_by_id(id, db)
@@ -198,7 +198,7 @@ async def create_category(name: str, db: AsyncSession):
 
 async def update_category(id: uuid.UUID, name: str, db: AsyncSession):
     category = await get_category_by_name(name, db)
-    if category is not None and category.id != id:
+    if category is not None and category[0].id != id:
         raise exceptions.EntityAlreadyExists
 
     category = await get_category_by_id(id, db)

@@ -63,7 +63,7 @@ async def update_brand(
     return await service.update_brand(request.brand_id, request.name, db)
 
 
-@router.get("/brands", tags=["goods"], response_model=List[schemas.Brand])
+@router.get("/brand", tags=["goods"], response_model=List[schemas.Brand])
 async def get_brands(db: Annotated[AsyncSession, Depends(get_db)]):
     return await service.get_brands(db)
 
