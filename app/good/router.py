@@ -63,6 +63,11 @@ async def update_brand(
     return await service.update_brand(request.brand_id, request.name, db)
 
 
+@router.get("/update_brand", tags=["goods"], response_model=List[schemas.Brand])
+async def get_brands(db: Annotated[AsyncSession, get_db]):
+    return await service.get_brands(db)
+
+
 @router.post(
     "/create_category",
     dependencies=[Depends(AuthDeps.admin_required)],

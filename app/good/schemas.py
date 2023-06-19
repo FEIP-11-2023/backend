@@ -91,3 +91,11 @@ class Color(ORJSONModel):
 
     class Config:
         orm_mode = True
+
+
+class Brand(ORJSONModel):
+    id: uuid.UUID
+    name: str
+
+    class Config:
+        orm_mode = True

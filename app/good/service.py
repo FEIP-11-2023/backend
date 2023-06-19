@@ -48,6 +48,12 @@ async def update_brand(id: uuid.UUID, name: str, db: AsyncSession):
     await db.commit()
 
 
+async def get_brands(db: AsyncSession) -> List[schemas.Brand]:
+    brands = (await db.execute(select(models.Brand))).fetchall()
+
+    return list(map(lambda x: schemas.Brand.from_orm(x[0]), brands))
+
+
 async def get_color_by_id(id: uuid.UUID, db: AsyncSession) -> Optional[models.Color]:
     return (
         await db.execute(select(models.Color).filter(models.Color.id == id))
@@ -112,7 +118,7 @@ async def get_sale_by_id(id: uuid.UUID, db: AsyncSession) -> Optional[models.Sal
 
 
 async def get_sales_by_good_id(
-        good_id: uuid.UUID, db: AsyncSession
+    good_id: uuid.UUID, db: AsyncSession
 ) -> List[models.Sale]:
     good = await get_good_by_id(good_id, db)
     if good is None:
@@ -153,7 +159,7 @@ async def switch_sale(sale_id: uuid.UUID, state: bool, db: AsyncSession):
 
 
 async def get_category_by_id(
-        id: uuid.UUID, db: AsyncSession
+    id: uuid.UUID, db: AsyncSession
 ) -> Optional[models.Category]:
     return (
         await db.execute(
@@ -163,7 +169,7 @@ async def get_category_by_id(
 
 
 async def get_category_by_name(
-        name: str, db: AsyncSession
+    name: str, db: AsyncSession
 ) -> Optional[models.Category]:
     return (
         await db.execute(
@@ -194,12 +200,12 @@ async def update_category(id: uuid.UUID, name: str, db: AsyncSession):
     category = await get_category_by_name(name, db)
     if category is not None and category.id != id:
         raise exceptions.EntityAlreadyExists
-    
+
     category = await get_category_by_id(id, db)
-    
+
     if category is None:
         raise exceptions.EntityNotFound(str(id))
-    
+
     category[0].name = name
 
     await db.commit()
