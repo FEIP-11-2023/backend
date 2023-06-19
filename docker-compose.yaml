@@ -33,6 +33,9 @@ services:
       - "traefik.http.routers.minio_api.tls.certresolver=le"
       - "traefik.http.routers.minio_api.service=minio_api"
       - "traefik.http.services.minio_api.loadbalancer.server.port=9000"
+    networks:
+      - local
+      - traefik-net
   db:
     image: postgres
     restart: always
