@@ -4,7 +4,7 @@ from typing import Optional, List
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from app.good import models
+from app.good import models, schemas
 from app.good import exceptions
 
 
@@ -194,3 +194,9 @@ async def update_category(id: uuid.UUID, name: str, db: AsyncSession):
     await db.commit()
 
     return
+
+
+async def get_colors(db: AsyncSession) -> List[schemas.Color]:
+    colors = (await db.execute(select(models.Color))).all()
+    
+    return list(map(schemas.Color.from_orm, colors))

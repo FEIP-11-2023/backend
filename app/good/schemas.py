@@ -83,3 +83,11 @@ class CreateSale(ORJSONModel):
 class SwitchSale(ORJSONModel):
     sale_id: uuid.UUID
     active: bool
+
+
+class Color(ORJSONModel):
+    id: uuid.UUID
+    name: str
+    
+    class Config:
+        orm_mode = True

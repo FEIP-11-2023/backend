@@ -1,5 +1,5 @@
 import uuid
-from typing import Annotated
+from typing import Annotated, List
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -108,6 +108,15 @@ async def update_color(
     request: schemas.UpdateColor, db: Annotated[AsyncSession, Depends(get_db)]
 ):
     return await service.update_color(request.color_id, request.name, db)
+
+
+@router.get(
+    "/get_colots",
+    tags=["goods", "user"],
+    response_model=List[schemas.Color]
+)
+async def get_colors(db: Annotated[AsyncSession, Depends(get_db)]):
+    return await service.get_colors(db)
 
 
 @router.post(
