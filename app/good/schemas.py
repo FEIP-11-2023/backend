@@ -107,3 +107,10 @@ class Category(ORJSONModel):
     
     class Config:
         orm_mode = True
+      
+        
+class Sale(ORJSONModel):
+    id: uuid.UUID
+    size: int
+    good_id: uuid.UUID
+    active: bool

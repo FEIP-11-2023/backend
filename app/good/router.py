@@ -151,3 +151,16 @@ async def switch_sale(
     return await service.switch_sale(
         sale_id=request.sale_id, state=request.active, db=db
     )
+
+
+@router.get(
+    "/get_sales",
+    dependencies=[Depends(AuthDeps.admin_required)],
+    tags=["goods"],
+    response_model=List[schemas.Sale]
+)
+async def get_sales(
+        good_id: uuid.UUID,
+        db: Annotated[AsyncSession, Depends(get_db)]
+):
+    return await service.get_sales_by_good_id(good_id, db)
