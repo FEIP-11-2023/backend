@@ -30,6 +30,7 @@ async def create_brand(name: str, db: AsyncSession):
     db.add(brand)
     await db.flush()
     await db.refresh(brand)
+    await db.commit()
 
     return brand.id
 
@@ -124,6 +125,7 @@ async def create_sale(good_id: uuid.UUID, size: int, db: AsyncSession) -> uuid.U
     db.add(new_sale)
     await db.flush()
     await db.refresh(new_sale)
+    await db.commit()
     return new_sale.id
 
 
@@ -173,6 +175,7 @@ async def create_category(name: str, db: AsyncSession):
     db.add(category)
     await db.flush()
     await db.refresh(category)
+    await db.commit()
 
     return category.id
 
