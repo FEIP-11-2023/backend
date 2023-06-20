@@ -267,10 +267,10 @@ async def create_good(
     new_good = models.Good(
         name=name,
         description=description,
-        category=category,
-        color=color,
-        brand=brand,
-        cost=price,
+        color_id=color_id,
+        brand_id=brand_id,
+        category_id=category_id,
+        cost=price
     )
 
     db.add(new_good)
