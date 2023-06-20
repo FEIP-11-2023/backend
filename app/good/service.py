@@ -4,6 +4,7 @@ from typing import Optional, List
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 
 from app.good import models, schemas
 from app.good import exceptions
@@ -327,6 +328,12 @@ async def update_good(
 
 
 async def get_goods(db: AsyncSession) -> List[schemas.Good]:
-    goods = (await db.execute(select(models.Good))).fetchall()
+    goods = (
+        await db.execute(
+            select(models.Good).options(
+                selectinload(models.Good.brand, models.Good.color, models.Good.category)
+            )
+        )
+    ).fetchall()
 
     return list(map(lambda x: schemas.Good.from_orm(x[0]), goods))

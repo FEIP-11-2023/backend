@@ -55,11 +55,7 @@ async def update_good(
     )
 
 
-@router.get(
-    "/good/all",
-    tags=["goods", "admin"],
-    response_model=List[schemas.Good]
-)
+@router.get("/good/all", tags=["goods", "admin"], response_model=List[schemas.Good])
 async def get_all_goods(db: Annotated[AsyncSession, Depends(get_db)]):
     return await service.get_goods(db)
 
