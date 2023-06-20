@@ -340,4 +340,4 @@ async def get_goods(db: AsyncSession) -> List[schemas.Good]:
     
     print(goods)
     
-    return list(map(lambda x: schemas.Good.from_orm(x[0]), goods))
+    return list(map(lambda x: schemas.Good.from_orm(x), goods))
