@@ -4,7 +4,7 @@ from typing import Optional, List
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from sqlalchemy.orm import selectinload
+from sqlalchemy.orm import selectinload, joinedload
 
 from app.good import models, schemas
 from app.good import exceptions
@@ -331,11 +331,11 @@ async def get_goods(db: AsyncSession) -> List[schemas.Good]:
     goods = (
         await db.execute(
             select(models.Good).options(
-                selectinload(models.Good.brand),
-                selectinload(models.Good.color),
-                selectinload(models.Good.category),
-                selectinload(models.Good.brand),
-                selectinload(models.Good.sales)
+                joinedload(models.Good.brand),
+                joinedload(models.Good.color),
+                joinedload(models.Good.category),
+                joinedload(models.Good.brand),
+                joinedload(models.Good.sales)
             )
         )
     ).scalars()
