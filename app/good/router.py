@@ -93,11 +93,7 @@ async def update_category(
     await service.update_category(request.category_id, request.name, db)
 
 
-@router.get(
-    "/category",
-    tags=["goods"],
-    response_model=List[schemas.Category]
-)
+@router.get("/category", tags=["goods"], response_model=List[schemas.Category])
 async def get_categories(db: Annotated[AsyncSession, Depends(get_db)]):
     return await service.get_categories(db)
 
@@ -157,10 +153,7 @@ async def switch_sale(
     "/get_sales",
     dependencies=[Depends(AuthDeps.admin_required)],
     tags=["goods", "admin"],
-    response_model=List[schemas.Sale]
+    response_model=List[schemas.Sale],
 )
-async def get_sales(
-        good_id: uuid.UUID,
-        db: Annotated[AsyncSession, Depends(get_db)]
-):
+async def get_sales(good_id: uuid.UUID, db: Annotated[AsyncSession, Depends(get_db)]):
     return await service.get_sales_by_good_id(good_id, db)

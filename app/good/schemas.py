@@ -1,7 +1,7 @@
 import decimal
 import re
 import uuid
-from typing import Optional
+from typing import Optional, List
 
 from app.good import models
 from app.good import exceptions
@@ -104,13 +104,51 @@ class Brand(ORJSONModel):
 class Category(ORJSONModel):
     id: uuid.UUID
     name: str
-    
+
     class Config:
         orm_mode = True
-      
-        
+
+
 class Sale(ORJSONModel):
     id: uuid.UUID
     size: int
     good_id: uuid.UUID
     active: bool
+
+    class Config:
+        orm_mode = True
+
+
+class Photo(ORJSONModel):
+    id: uuid.UUID
+    bucket_name: str
+    image_name: str
+    good_id: uuid.UUID
+
+    class Config:
+        orm_mode = True
+
+
+class Size(ORJSONModel):
+    id: uuid.UUID
+    remaining: int
+    size: int
+    good_id: uuid.UUID
+
+    class Config:
+        orm_mode = True
+
+
+class Good(ORJSONModel):
+    id: uuid.UUID
+    name: str
+    description: str
+    category: Category
+    cost: decimal.Decimal
+    sales: List[Sale]
+    photos: List[Photo]
+    color: Color
+    sizes: Size
+
+    class Config:
+        orm_mode = True

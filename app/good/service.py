@@ -1,3 +1,4 @@
+import decimal
 import uuid
 from typing import Optional, List
 
@@ -223,3 +224,61 @@ async def get_colors(db: AsyncSession) -> List[schemas.Color]:
     colors = (await db.execute(select(models.Color))).fetchall()
 
     return list(map(lambda x: schemas.Color.from_orm(x[0]), colors))
+
+
+async def get_good_by_name(name: str, db: AsyncSession) -> Optional[models.Good]:
+    good = (
+        await db.execute(
+            select(models.Good).with_for_update().filter(models.Good.name == name)
+        )
+    ).one_or_none()
+
+    if good is None:
+        return None
+
+    return good[0]
+
+
+async def create_good(
+    name: str,
+    description: str,
+    price: decimal.Decimal,
+    category_id: uuid.UUID,
+    color_id: uuid.UUID,
+    brand_id: uuid.UUID,
+    db: AsyncSession,
+) -> uuid.UUID:
+    color = get_color_by_id(color_id, db)
+    if color is None:
+        raise exceptions.EntityNotFound(str(color_id))
+
+    brand = get_brand_by_id(brand_id, db)
+    if brand is None:
+        raise exceptions.EntityNotFound(str(brand_id))
+
+    category = get_category_by_id(category_id, db)
+    if category is None:
+        raise exceptions.EntityNotFound(str(category_id))
+
+    good = get_good_by_name(name, db)
+    if good is not None:
+        raise exceptions.EntityAlreadyExists()
+
+    new_good = models.Good(
+        name=name,
+        description=description,
+        category=category,
+        color=color,
+        brand=brand,
+        price=price,
+    )
+
+    db.add(new_good)
+    await db.flush()
+    await db.refresh(new_good)
+
+    id = new_good.id
+
+    await db.commit()
+
+    return id

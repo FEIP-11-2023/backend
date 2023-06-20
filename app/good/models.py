@@ -46,6 +46,7 @@ class Good(Base, TableNameAndIDMixin, CreatedAtMixin, UpdatedAtMixin):
     color: Mapped[Optional[Color]] = relationship(Color)
 
     sizes: Mapped[List["Size"]] = relationship("Size", back_populates="good")
+    photos: Mapped[List["GoodPhoto"]] = relationship("GoodPhoto")
 
 
 class Sale(Base, TableNameAndIDMixin, CreatedAtMixin, UpdatedAtMixin):
@@ -62,3 +63,8 @@ class Size(Base, TableNameAndIDMixin):
     UniqueConstraint(good_id, size)
 
     good: Mapped[Good] = relationship("Good", back_populates="sizes")
+
+
+class GoodPhoto(Base, TableNameAndIDMixin, CreatedAtMixin):
+    bucket_name: Mapped[str] = mapped_column(default="good-photos")
+    image_name: Mapped[str]
