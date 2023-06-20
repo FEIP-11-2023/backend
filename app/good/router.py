@@ -23,7 +23,15 @@ async def create_good(
     request: schemas.CreateGood,
     db: Annotated[AsyncSession, Depends(get_db)],
 ):
-    pass
+    return await service.create_good(
+        request.name,
+        request.description,
+        request.price,
+        request.category_id,
+        request.color_id,
+        request.brand_id,
+        db,
+    )
 
 
 @router.patch(
