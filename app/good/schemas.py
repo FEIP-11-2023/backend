@@ -149,6 +149,7 @@ class Good(ORJSONModel):
     photos: List[Photo]
     color: Color
     sizes: Size
+    brand: Brand
 
     class Config:
         orm_mode = True

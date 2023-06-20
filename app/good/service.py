@@ -334,6 +334,8 @@ async def get_goods(db: AsyncSession) -> List[schemas.Good]:
                 selectinload(models.Good.brand),
                 selectinload(models.Good.color),
                 selectinload(models.Good.category),
+                selectinload(models.Good.brand),
+                selectinload(models.Good.sales)
             )
         )
     ).scalars()
