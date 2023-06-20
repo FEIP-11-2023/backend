@@ -1,4 +1,5 @@
 import enum
+import uuid
 from typing import Optional, List
 
 from sqlalchemy import (
@@ -66,5 +67,6 @@ class Size(Base, TableNameAndIDMixin):
 
 
 class GoodPhoto(Base, TableNameAndIDMixin, CreatedAtMixin):
+    good_id: Mapped[uuid.UUID] = mapped_column(ForeignKey(Good.id))
     bucket_name: Mapped[str] = mapped_column(default="good-photos")
     image_name: Mapped[str]
