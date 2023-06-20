@@ -331,7 +331,9 @@ async def get_goods(db: AsyncSession) -> List[schemas.Good]:
     goods = (
         await db.execute(
             select(models.Good).options(
-                selectinload(models.Good.brand, models.Good.color, models.Good.category)
+                selectinload(models.Good.brand),
+                selectinload(models.Good.color),
+                selectinload(models.Good.category),
             )
         )
     ).fetchall()
