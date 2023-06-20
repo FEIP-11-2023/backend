@@ -282,3 +282,45 @@ async def create_good(
     await db.commit()
 
     return id
+
+
+async def update_good(
+    id: uuid.UUID,
+    name: str,
+    description: str,
+    price: decimal.Decimal,
+    category_id: uuid.UUID,
+    color_id: uuid.UUID,
+    brand_id: uuid.UUID,
+    db: AsyncSession,
+) -> uuid.UUID:
+    color = await get_color_by_id(color_id, db)
+    if color is None:
+        raise exceptions.EntityNotFound(str(color_id))
+
+    brand = await get_brand_by_id(brand_id, db)
+    if brand is None:
+        raise exceptions.EntityNotFound(str(brand_id))
+
+    category = await get_category_by_id(category_id, db)
+    if category is None:
+        raise exceptions.EntityNotFound(str(category_id))
+
+    good = await get_good_by_name(name, db)
+    if good is not None and good.id != id:
+        raise exceptions.EntityAlreadyExists()
+
+    good = await get_good_by_id(id, db)
+    if good is None:
+        raise exceptions.EntityNotFound(str(id))
+    
+    good.name = name
+    good.description = description,
+    good.cost = price
+    good.category_id = category_id
+    good.color_id = color_id
+    good.brand_id = brand_id
+    
+    await db.commit()
+
+    return id

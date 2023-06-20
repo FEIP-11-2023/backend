@@ -43,7 +43,16 @@ async def update_good(
     request: schemas.UpdateGood,
     db: Annotated[AsyncSession, Depends(get_db)],
 ):
-    pass
+    return await service.update_good(
+        request.good_id,
+        request.name,
+        request.description,
+        request.price,
+        request.category_id,
+        request.color_id,
+        request.brand_id,
+        db,
+    )
 
 
 @router.post(
