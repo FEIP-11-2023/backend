@@ -270,7 +270,7 @@ async def create_good(
         color_id=color_id,
         brand_id=brand_id,
         category_id=category_id,
-        cost=price
+        cost=price,
     )
 
     db.add(new_good)
@@ -313,14 +313,20 @@ async def update_good(
     good = await get_good_by_id(id, db)
     if good is None:
         raise exceptions.EntityNotFound(str(id))
-    
+
     good.name = name
-    good.description = description,
+    good.description = description
     good.cost = price
     good.category_id = category_id
     good.color_id = color_id
     good.brand_id = brand_id
-    
+
     await db.commit()
 
     return id
+
+
+async def get_goods(db: AsyncSession) -> List[schemas.Good]:
+    goods = (await db.execute(select(models.Good))).fetchall()
+
+    return list(map(lambda x: schemas.Good.from_orm(x[0]), goods))
