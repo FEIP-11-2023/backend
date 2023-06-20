@@ -270,7 +270,7 @@ async def create_good(
         category=category,
         color=color,
         brand=brand,
-        price=price,
+        cost=price,
     )
 
     db.add(new_good)
