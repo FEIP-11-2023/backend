@@ -248,19 +248,19 @@ async def create_good(
     brand_id: uuid.UUID,
     db: AsyncSession,
 ) -> uuid.UUID:
-    color = get_color_by_id(color_id, db)
+    color = await get_color_by_id(color_id, db)
     if color is None:
         raise exceptions.EntityNotFound(str(color_id))
 
-    brand = get_brand_by_id(brand_id, db)
+    brand = await get_brand_by_id(brand_id, db)
     if brand is None:
         raise exceptions.EntityNotFound(str(brand_id))
 
-    category = get_category_by_id(category_id, db)
+    category = await get_category_by_id(category_id, db)
     if category is None:
         raise exceptions.EntityNotFound(str(category_id))
 
-    good = get_good_by_name(name, db)
+    good = await get_good_by_name(name, db)
     if good is not None:
         raise exceptions.EntityAlreadyExists()
 
