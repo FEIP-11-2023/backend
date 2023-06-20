@@ -331,11 +331,12 @@ async def get_goods(db: AsyncSession) -> List[schemas.Good]:
     goods = (
         await db.execute(
             select(models.Good).options(
-                joinedload(models.Good.brand),
                 joinedload(models.Good.color),
                 joinedload(models.Good.category),
                 joinedload(models.Good.brand),
-                joinedload(models.Good.sales)
+                joinedload(models.Good.sales),
+                joinedload(models.Good.sizes),
+                joinedload(models.Good.photos)
             )
         )
     ).scalars()
