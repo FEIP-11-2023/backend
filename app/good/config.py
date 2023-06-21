@@ -1,5 +1,4 @@
 from pydantic import BaseSettings, Field
-import secrets
 
 
 class GoodsConfig(BaseSettings):
