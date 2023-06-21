@@ -1,6 +1,6 @@
 import decimal
 import uuid
-from typing import List
+from typing import List, Optional
 
 from app.good import exceptions
 from app.models import ORJSONModel
@@ -143,10 +143,10 @@ class Good(ORJSONModel):
     description: str
     category: Category
     cost: decimal.Decimal
-    sales: List[Sale]
-    photos: List[Photo]
-    color: Color
-    sizes: Size
+    sales: Optional[List[Sale]] = []
+    photos: Optional[List[Photo]] = []
+    color: Optional[Color]
+    sizes: Optional[Size]
     brand: Brand
 
     class Config:
