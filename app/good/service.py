@@ -380,5 +380,7 @@ async def add_photo(
     await db.refresh(new_photo)
 
     id = new_photo.id
+    
+    await db.commit()
 
     return id
