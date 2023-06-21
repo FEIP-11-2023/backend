@@ -146,7 +146,7 @@ class Good(ORJSONModel):
     sales: Optional[List[Sale]] = []
     photos: Optional[List[Photo]] = []
     color: Optional[Color]
-    sizes: Optional[Size]
+    sizes: Optional[List[Size]]
     brand: Brand
 
     class Config:
