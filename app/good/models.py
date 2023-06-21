@@ -41,7 +41,7 @@ class Good(Base, TableNameAndIDMixin, CreatedAtMixin, UpdatedAtMixin):
     color_id: Mapped[Optional[UUID]] = mapped_column(ForeignKey(Color.id))
     cost: Mapped[NUMERIC] = mapped_column(NUMERIC(10, 2))
 
-    sales: Mapped["Sale"] = relationship("Sale")
+    sales: Mapped[List["Sale"]] = relationship("Sale")
     brand: Mapped[Brand] = relationship(Brand)
     category: Mapped[Category] = relationship(Category)
     color: Mapped[Optional[Color]] = relationship(Color)
