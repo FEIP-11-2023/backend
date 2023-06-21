@@ -1,4 +1,5 @@
 import decimal
+import io
 import secrets
 import uuid
 from typing import Optional, List
@@ -368,7 +369,7 @@ async def add_photo(
     if not mc.bucket_exists("good-photos"):
         mc.make_bucket("good-photos")
 
-    mc.put_object("good-photos", name, photo, len(photo))
+    mc.put_object("good-photos", name, io.BytesIO(photo), len(photo))
 
     new_photo = models.GoodPhoto(
         good_id=good_id, bucket_name="good-photos", image_name=name
