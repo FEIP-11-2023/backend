@@ -79,7 +79,6 @@ services:
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       DB_HOST: db
       DB_DATABASE: feip
-      MINIO_HOST: minio
     env_file: .env
     restart: always
     expose:
