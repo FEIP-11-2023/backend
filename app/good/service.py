@@ -1,4 +1,5 @@
 import decimal
+import secrets
 import uuid
 from typing import Optional, List
 
@@ -8,6 +9,9 @@ from sqlalchemy.orm import selectinload, joinedload
 
 from app.good import models, schemas
 from app.good import exceptions
+from app.good.config import GoodsConfig
+
+import minio
 
 
 async def get_brand_by_name(name: str, db: AsyncSession) -> Optional[models.Brand]:
@@ -342,3 +346,37 @@ async def get_goods(db: AsyncSession) -> List[schemas.Good]:
     ).scalars()
 
     return list(map(lambda x: schemas.Good.from_orm(x), goods))
+
+
+async def add_photo(
+    good_id: uuid.UUID, photo: bytes, extension: str, db: AsyncSession
+) -> uuid.UUID:
+    good = await get_good_by_id(good_id, db)
+
+    if good is None:
+        raise exceptions.EntityNotFound(str(good_id))
+
+    name = secrets.token_hex(30) + "." + extension
+
+    mc = minio.Minio(
+        GoodsConfig.MINIO_HOST,
+        access_key=GoodsConfig.MINIO_ACCESS,
+        secret_key=GoodsConfig.MINIO_SECRET,
+    )
+
+    if not mc.bucket_exists("good-photos"):
+        mc.make_bucket("good-photos")
+
+    mc.put_object("good-photos", name, photo, len(photo))
+
+    new_photo = models.GoodPhoto(
+        good_id=good_id, bucket_name="good-photos", image_name=name
+    )
+
+    db.add(new_photo)
+    await db.flush()
+    await db.refresh(new_photo)
+
+    id = new_photo.id
+
+    return id

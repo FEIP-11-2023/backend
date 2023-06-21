@@ -1,6 +1,6 @@
 import uuid
 from typing import Annotated, List
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Form, File, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
@@ -52,6 +52,17 @@ async def update_good(
         request.color_id,
         request.brand_id,
         db,
+    )
+
+
+@router.post("/good/photo", tags=["goods", "admin"], response_model=uuid.UUID)
+async def add_good_photo(
+    good_id: Annotated[uuid.UUID, Form()],
+    photo: Annotated[UploadFile, File()],
+    db: Annotated[AsyncSession, Depends(get_db)],
+):
+    return await service.add_photo(
+        good_id, await photo.read(), photo.filename.split(".")[-1], db
     )
 
 
