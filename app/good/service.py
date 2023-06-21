@@ -341,6 +341,6 @@ async def get_goods(db: AsyncSession) -> List[schemas.Good]:
         )
     ).scalars()
     
-    print(goods)
+    print(goods[0].sales)
     
     return list(map(lambda x: schemas.Good.from_orm(x), goods))
