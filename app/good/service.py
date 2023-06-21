@@ -359,9 +359,9 @@ async def add_photo(
     name = secrets.token_hex(30) + "." + extension
 
     mc = minio.Minio(
-        GoodsConfig.MINIO_HOST,
-        access_key=GoodsConfig.MINIO_ACCESS,
-        secret_key=GoodsConfig.MINIO_SECRET,
+        GoodsConfig().MINIO_HOST,
+        access_key=GoodsConfig().MINIO_ACCESS,
+        secret_key=GoodsConfig().MINIO_SECRET,
     )
 
     if not mc.bucket_exists("good-photos"):
