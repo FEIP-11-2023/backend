@@ -336,11 +336,9 @@ async def get_goods(db: AsyncSession) -> List[schemas.Good]:
                 selectinload(models.Good.brand),
                 selectinload(models.Good.sales),
                 selectinload(models.Good.sizes),
-                selectinload(models.Good.photos)
+                selectinload(models.Good.photos),
             )
         )
     ).scalars()
-    
-    print(goods.first().sales)
-    
+
     return list(map(lambda x: schemas.Good.from_orm(x), goods))
