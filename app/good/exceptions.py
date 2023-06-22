@@ -33,3 +33,9 @@ class EntityAlreadyExists(ExceptionDescribed):
     code = "GO-0004"
     status_code = 400
     description = {"en": "Entity already exists", "ru": "Сущность уже существует"}
+
+
+class SizeIsRequired(ExceptionDescribed):
+    code = "GO-0005"
+    status_code = 400
+    description = {"en": "Size is required", "ru": "Необходимо указать размер"}

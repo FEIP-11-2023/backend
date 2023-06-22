@@ -171,3 +171,9 @@ class GoodsSearch(ORJSONModel):
     brand_ids: Optional[List[uuid.UUID]] = []
     limit: Optional[int] = 10
     offset: Optional[int] = 0
+
+
+class AddToCartRequest(ORJSONModel):
+    good_id: uuid.UUID
+    size_id: uuid.UUID
+    count: Optional[int] = 1

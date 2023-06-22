@@ -502,3 +502,45 @@ async def search_goods(
     )
 
     return list(map(lambda x: schemas.Good.from_orm(x), goods))
+
+
+async def add_to_cart(
+    user_id: uuid.UUID,
+    good_id: uuid.UUID,
+    size_id: Optional[uuid.UUID],
+    count: int,
+    db: AsyncSession,
+) -> uuid.UUID:
+    good = await get_good_by_id(good_id, db)
+
+    if good is None:
+        raise exceptions.EntityNotFound(str(good_id))
+
+    if len(good.sizes) != 0:
+        if size_id is None:
+            raise exceptions.SizeIsRequired
+        no_size = True
+
+        for size in good.sizes:
+            if size.id == size_id:
+                no_size = False
+                break
+
+        if no_size:
+            raise exceptions.EntityNotFound(str(size_id))
+    else:
+        raise exceptions.EntityNotFound(str(size_id))
+
+    new_cart = models.Cart(
+        good_id=good_id, size_id=size_id, count=count, user_id=user_id
+    )
+
+    db.add(new_cart)
+    await db.flush()
+    await db.refresh(new_cart)
+
+    id = new_cart.id
+
+    await db.commit()
+
+    return id

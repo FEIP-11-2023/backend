@@ -19,6 +19,7 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
 from app.database import Base, TableNameAndIDMixin, CreatedAtMixin, UpdatedAtMixin
+from app.auth.models import User
 
 
 class Brand(Base, TableNameAndIDMixin):
@@ -80,3 +81,12 @@ class CategoryPhoto(Base, TableNameAndIDMixin):
     category_id: Mapped[uuid.UUID] = mapped_column(ForeignKey(Category.id), unique=True)
     bucket_name: Mapped[str] = mapped_column(default="good-photos")
     image_name: Mapped[str]
+
+
+class Cart(Base, TableNameAndIDMixin):
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey(User.id))
+
+    good_id: Mapped[uuid.UUID] = mapped_column(ForeignKey(Good.id))
+    size_id: Mapped[Optional[uuid.UUID]] = mapped_column(ForeignKey(Size.id))
+
+    count: int = mapped_column(default=1)

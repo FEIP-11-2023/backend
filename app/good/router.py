@@ -226,3 +226,10 @@ async def switch_sale(
 )
 async def get_sales(good_id: uuid.UUID, db: Annotated[AsyncSession, Depends(get_db)]):
     return await service.get_sales_by_good_id(good_id, db)
+
+
+@router.post("/add_to_cart", tags=["goods"], response_model=uuid.UUID)
+async def add_to_cart(
+    request: schemas.AddToCartRequest, user: Annotated[AuthUser, Depends(AuthDeps.user_by_token(login_required=True))], db: Annotated[AsyncSession, Depends(get_db)]
+):
+    return await service.add_to_cart(user.id, request.good_id, request.size_id, request.count, db)
