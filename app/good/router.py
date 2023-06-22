@@ -55,7 +55,12 @@ async def update_good(
     )
 
 
-@router.post("/good/photo", tags=["goods", "admin"], response_model=uuid.UUID)
+@router.post(
+    "/good/photo",
+    tags=["goods", "admin"],
+    dependencies=[Depends(AuthDeps.admin_required)],
+    response_model=uuid.UUID,
+)
 async def add_good_photo(
     good_id: Annotated[uuid.UUID, Form()],
     photo: Annotated[UploadFile, File()],
@@ -124,6 +129,21 @@ async def update_category(
     db: Annotated[AsyncSession, Depends(get_db)],
 ):
     await service.update_category(request.category_id, request.name, db)
+
+@router.patch(
+    "/category/photo",
+    tags=["goods", "admin"],
+    dependencies=[Depends(AuthDeps.admin_required)],
+    response_model=uuid.UUID,
+)
+async def add_good_photo(
+    category_id: Annotated[uuid.UUID, Form()],
+    photo: Annotated[UploadFile, File()],
+    db: Annotated[AsyncSession, Depends(get_db)],
+):
+    return await service.set_category_photo(
+        category_id, await photo.read(), photo.filename.split(".")[-1], db
+    )
 
 
 @router.get("/category", tags=["goods"], response_model=List[schemas.Category])

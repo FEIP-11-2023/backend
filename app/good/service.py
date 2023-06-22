@@ -110,28 +110,43 @@ async def update_color(id: uuid.UUID, name: str, db: AsyncSession):
 
 async def get_good_by_id(id: uuid.UUID, db: AsyncSession) -> Optional[models.Good]:
     return (
-        await db.execute(
-            select(models.Good).with_for_update().filter(models.Good.id == id)
+        (
+            await db.execute(
+                select(models.Good).with_for_update().filter(models.Good.id == id)
+            )
         )
-    ).scalars().one_or_none()
+        .scalars()
+        .one_or_none()
+    )
 
 
 async def get_sale_by_id(id: uuid.UUID, db: AsyncSession) -> Optional[models.Sale]:
     return (
-        await db.execute(
-            select(models.Sale).with_for_update().filter(models.Sale.id == id)
+        (
+            await db.execute(
+                select(models.Sale).with_for_update().filter(models.Sale.id == id)
+            )
         )
-    ).scalars().one_or_none()
+        .scalars()
+        .one_or_none()
+    )
 
 
 async def get_sales_by_good_id(
     good_id: uuid.UUID, db: AsyncSession
 ) -> List[schemas.Sale]:
     good = (
-        await db.execute(
-            select(models.Good).with_for_update().options(selectinload(models.Good.sales)).filter(models.Good.id == good_id)
+        (
+            await db.execute(
+                select(models.Good)
+                .with_for_update()
+                .options(selectinload(models.Good.sales))
+                .filter(models.Good.id == good_id)
+            )
         )
-    ).scalars().one_or_none()
+        .scalars()
+        .one_or_none()
+    )
     if good is None:
         raise exceptions.EntityNotFound(str(good_id))
 
@@ -174,7 +189,10 @@ async def get_category_by_id(
 ) -> Optional[models.Category]:
     return (
         await db.execute(
-            select(models.Category).with_for_update().filter(models.Category.id == id)
+            select(models.Category)
+            .with_for_update()
+            .options(selectinload(models.Category.photo))
+            .filter(models.Category.id == id)
         )
     ).one_or_none()
 
@@ -186,6 +204,7 @@ async def get_category_by_name(
         await db.execute(
             select(models.Category)
             .with_for_update()
+            .options(selectinload(models.Category.photo))
             .filter(models.Category.name == name)
         )
     ).one_or_none()
@@ -367,7 +386,7 @@ async def add_photo(
         GoodsConfig().MINIO_HOST,
         access_key=GoodsConfig().MINIO_ACCESS,
         secret_key=GoodsConfig().MINIO_SECRET,
-        secure=False
+        secure=False,
     )
 
     if not mc.bucket_exists("good-photos"):
@@ -384,7 +403,46 @@ async def add_photo(
     await db.refresh(new_photo)
 
     id = new_photo.id
-    
+
+    await db.commit()
+
+    return id
+
+
+async def set_category_photo(
+    category_id: uuid.UUID, photo: bytes, extension: str, db: AsyncSession
+) -> uuid.UUID:
+    category = await get_category_by_id(id, db)
+
+    if category is None:
+        raise exceptions.EntityNotFound(str(category_id))
+
+    name = secrets.token_hex(30) + "." + extension
+
+    mc = minio.Minio(
+        GoodsConfig().MINIO_HOST,
+        access_key=GoodsConfig().MINIO_ACCESS,
+        secret_key=GoodsConfig().MINIO_SECRET,
+        secure=False,
+    )
+
+    if not mc.bucket_exists("category-photos"):
+        mc.make_bucket("category-photos")
+
+    mc.put_object("category-photos", name, io.BytesIO(photo), len(photo))
+
+    if category.photo is not None:
+        photo = category.photo
+    else:
+        photo = models.CategoryPhoto(
+            category_id=category_id, bucket_name="category-photos", image_name=name
+        )
+        db.add(photo)
+    await db.flush()
+    await db.refresh(photo)
+
+    id = photo.id
+
     await db.commit()
 
     return id

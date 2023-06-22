@@ -102,6 +102,7 @@ class Brand(ORJSONModel):
 class Category(ORJSONModel):
     id: uuid.UUID
     name: str
+    photo: Optional["Photo"]
 
     class Config:
         orm_mode = True

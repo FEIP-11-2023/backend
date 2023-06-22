@@ -28,6 +28,8 @@ class Brand(Base, TableNameAndIDMixin):
 class Category(Base, TableNameAndIDMixin):
     name: Mapped[str] = mapped_column(unique=True)
 
+    photo: Mapped[Optional["CategoryPhoto"]] = relationship("CategoryPhoto")
+
 
 class Color(Base, TableNameAndIDMixin):
     name: Mapped[str] = mapped_column(unique=True)
@@ -68,5 +70,11 @@ class Size(Base, TableNameAndIDMixin):
 
 class GoodPhoto(Base, TableNameAndIDMixin, CreatedAtMixin):
     good_id: Mapped[uuid.UUID] = mapped_column(ForeignKey(Good.id))
+    bucket_name: Mapped[str] = mapped_column(default="good-photos")
+    image_name: Mapped[str]
+
+
+class CategoryPhoto(Base, TableNameAndIDMixin):
+    category_id: Mapped[uuid.UUID] = mapped_column(ForeignKey(Category.id), unique=True)
     bucket_name: Mapped[str] = mapped_column(default="good-photos")
     image_name: Mapped[str]
