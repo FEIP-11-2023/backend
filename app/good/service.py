@@ -112,9 +112,10 @@ async def get_good_by_id(id: uuid.UUID, db: AsyncSession) -> Optional[models.Goo
     return (
         (
             await db.execute(
-                select(models.Good).options(
-                    selectinload(models.Good.sizes)
-                ).with_for_update().filter(models.Good.id == id)
+                select(models.Good)
+                .options(selectinload(models.Good.sizes))
+                .with_for_update()
+                .filter(models.Good.id == id)
             )
         )
         .scalars()
@@ -506,6 +507,24 @@ async def search_goods(
     return list(map(lambda x: schemas.Good.from_orm(x), goods))
 
 
+async def get_cart_by_user_size(
+    user_id: uuid.UUID, size_id: uuid.UUID, db: AsyncSession
+) -> Optional[models.Cart]:
+    cart = (
+        (
+            await db.execute(
+                select(models.Cart).filter(
+                    models.Cart.user_id == user_id, models.Cart.size_id == size_id
+                )
+            )
+        )
+        .scalars()
+        .one_or_none()
+    )
+
+    return cart
+
+
 async def add_to_cart(
     user_id: uuid.UUID,
     good_id: uuid.UUID,
@@ -533,19 +552,31 @@ async def add_to_cart(
     else:
         raise exceptions.EntityNotFound(str(size_id))
 
-    new_cart = models.Cart(
-        good_id=good_id, size_id=size_id, count=count, user_id=user_id
-    )
+    cart = await get_cart_by_user_size(user_id, size_id, db)
+    
+    if cart is None:
 
-    db.add(new_cart)
-    await db.flush()
-    await db.refresh(new_cart)
-
-    id = new_cart.id
-
-    await db.commit()
-
-    return id
+        new_cart = models.Cart(
+            good_id=good_id, size_id=size_id, count=count, user_id=user_id
+        )
+    
+        db.add(new_cart)
+        await db.flush()
+        await db.refresh(new_cart)
+    
+        id = new_cart.id
+    
+        await db.commit()
+    
+        return id
+    else:
+        cart.count += count
+        
+        id = cart.id
+        
+        await db.commit()
+        
+        return id
 
 
 async def get_size_by_good_id_and_size(
