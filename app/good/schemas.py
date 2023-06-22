@@ -104,6 +104,9 @@ class CategoryPhoto(ORJSONModel):
     bucket_name: str
     image_name: str
     category_id: uuid.UUID
+    
+    class Config:
+        orm_mode = True
 
 
 class Category(ORJSONModel):
