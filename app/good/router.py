@@ -147,28 +147,18 @@ async def add_good_photo(
     )
 
 
-@router.get(
-    "/goods/search",
-    tags=["goods"],
-    response_model=List[schemas.Good]
-)
+@router.get("/goods/search", tags=["goods"], response_model=List[schemas.Good])
 async def search_goods(
-        db: Annotated[AsyncSession, Depends(get_db)],
-        name: Annotated[Optional[str], Query()] = "",
-        brand_ids: Annotated[Optional[List[uuid.UUID]], Query()] = [],
-        color_ids: Annotated[Optional[List[uuid.UUID]], Query()] = [],
-        category_ids: Annotated[Optional[List[uuid.UUID]], Query()] = [],
-        limit: Annotated[Optional[int], Query()] = 10,
-        offset: Annotated[Optional[int], Query()] = 0
+    db: Annotated[AsyncSession, Depends(get_db)],
+    name: Annotated[Optional[str], Query()] = "",
+    brand_ids: Annotated[Optional[List[uuid.UUID]], Query()] = [],
+    color_ids: Annotated[Optional[List[uuid.UUID]], Query()] = [],
+    category_ids: Annotated[Optional[List[uuid.UUID]], Query()] = [],
+    limit: Annotated[Optional[int], Query()] = 10,
+    offset: Annotated[Optional[int], Query()] = 0,
 ):
     return await service.search_goods(
-        name,
-        brand_ids,
-        color_ids,
-        category_ids,
-        limit,
-        offset,
-        db
+        name, brand_ids, color_ids, category_ids, limit, offset, db
     )
 
 

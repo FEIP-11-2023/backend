@@ -372,8 +372,7 @@ async def get_goods(db: AsyncSession) -> List[schemas.Good]:
         await db.execute(
             select(models.Good).options(
                 selectinload(models.Good.color),
-                selectinload(models.Good.category),
-                selectinload(models.Category.photo),
+                selectinload(models.Good.category).selectinload(models.Category.photo),
                 selectinload(models.Good.brand),
                 selectinload(models.Good.sales),
                 selectinload(models.Good.sizes),
@@ -470,27 +469,36 @@ async def search_goods(
     offset: int,
     db: AsyncSession,
 ) -> List[schemas.Good]:
-    goods = (await db.execute(
-        select(models.Good)
-        .options(
-                selectinload(models.Good.color),
-                selectinload(models.Good.category),
-                selectinload(models.Category.photo),
-                selectinload(models.Good.brand),
-                selectinload(models.Good.sales),
-                selectinload(models.Good.sizes),
-                selectinload(models.Good.photos),
+    goods = (
+        (
+            await db.execute(
+                select(models.Good)
+                .options(
+                    selectinload(models.Good.color),
+                    selectinload(models.Good.category).selectinload(
+                        models.Category.photo
+                    ),
+                    selectinload(models.Good.brand),
+                    selectinload(models.Good.sales),
+                    selectinload(models.Good.sizes),
+                    selectinload(models.Good.photos),
+                )
+                .filter(
+                    *[
+                        models.Good.brand_id.in_(brands) if len(brands) > 0 else True,
+                        models.Good.color_id.in_(colors) if len(colors) > 0 else True,
+                        models.Good.category_id.in_(categories)
+                        if len(categories) > 0
+                        else True,
+                        models.Good.name.ilike(f"%{name}%") if len(name) > 0 else True,
+                    ]
+                )
+                .offset(offset)
+                .limit(limit)
+            )
         )
-        .filter(
-            *[
-                models.Good.brand_id.in_(brands) if len(brands) > 0 else True,
-                models.Good.color_id.in_(colors) if len(colors) > 0 else True,
-                models.Good.category_id.in_(categories) if len(categories) > 0 else True,
-                models.Good.name.ilike(f"%{name}%") if len(name) > 0 else True
-            ]
-        )
-        .offset(offset)
-        .limit(limit)
-    )).scalars().all()
+        .scalars()
+        .all()
+    )
 
     return list(map(lambda x: schemas.Good.from_orm(x), goods))
