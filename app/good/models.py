@@ -63,7 +63,7 @@ class Sale(Base, TableNameAndIDMixin, CreatedAtMixin, UpdatedAtMixin):
 
 class Size(Base, TableNameAndIDMixin):
     good_id: Mapped[UUID] = mapped_column(ForeignKey(Good.id))
-    size: Mapped[str] = mapped_column()
+    size: Mapped[int] = mapped_column()
     remainder: Mapped[int]
 
     UniqueConstraint(good_id, size)
