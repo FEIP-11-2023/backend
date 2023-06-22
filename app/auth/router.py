@@ -1,6 +1,7 @@
 # creates fastapi router for authentication
 import datetime
 import secrets
+import uuid
 from typing import Optional, Annotated, Tuple, List
 
 from fastapi import APIRouter, Depends
@@ -119,3 +120,21 @@ async def get_user(
     user: User = Depends(deps.user_by_token(User, login_required=False))
 ):
     return user
+
+
+@router.patch("/user", dependencies=[Depends(deps.admin_required)])
+async def change_user(
+    user_id: uuid.UUID, blocked: bool, db: Annotated[AsyncSession, Depends(get_db)]
+):
+    user: Optional[models.User] = (
+        (await db.execute(select(models.User).filter(models.User.id == user_id)))
+        .scalars()
+        .one_or_none()
+    )
+
+    if user is None:
+        raise exceptions.InvalidCredentialsException
+
+    user.blocked = blocked
+
+    await db.commit()

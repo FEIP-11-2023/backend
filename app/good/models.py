@@ -89,4 +89,6 @@ class Cart(Base, TableNameAndIDMixin):
     good_id: Mapped[uuid.UUID] = mapped_column(ForeignKey(Good.id))
     size_id: Mapped[Optional[uuid.UUID]] = mapped_column(ForeignKey(Size.id))
 
+    good: Mapped[Good] = relationship(Good, cascade="all,delete")
+
     count: Mapped[int] = mapped_column(default=1)
