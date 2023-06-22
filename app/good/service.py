@@ -131,7 +131,7 @@ async def get_sales_by_good_id(
     if good is None:
         raise exceptions.EntityNotFound(str(good_id))
 
-    return list(map(schemas.Sale.from_orm, good.sales))
+    return list(map(schemas.Sale.from_orm, await good.sales))
 
 
 async def create_sale(good_id: uuid.UUID, size: int, db: AsyncSession) -> uuid.UUID:
