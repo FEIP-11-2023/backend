@@ -109,7 +109,7 @@ class CategoryPhoto(ORJSONModel):
 class Category(ORJSONModel):
     id: uuid.UUID
     name: str
-    photo: Optional[CategoryPhoto]
+    photo: Optional[List[CategoryPhoto]]
 
     class Config:
         orm_mode = True
