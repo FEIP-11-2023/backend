@@ -373,6 +373,7 @@ async def get_goods(db: AsyncSession) -> List[schemas.Good]:
             select(models.Good).options(
                 selectinload(models.Good.color),
                 selectinload(models.Good.category),
+                selectinload(models.Category.photo),
                 selectinload(models.Good.brand),
                 selectinload(models.Good.sales),
                 selectinload(models.Good.sizes),
@@ -474,6 +475,7 @@ async def search_goods(
         .options(
                 selectinload(models.Good.color),
                 selectinload(models.Good.category),
+                selectinload(models.Category.photo),
                 selectinload(models.Good.brand),
                 selectinload(models.Good.sales),
                 selectinload(models.Good.sizes),
