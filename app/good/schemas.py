@@ -193,3 +193,13 @@ class CreateSize(ORJSONModel):
 class SetSizeRemainder(ORJSONModel):
     size_id: uuid.UUID
     remainder: int
+
+
+class Cart(ORJSONModel):
+    good_id: uuid.UUID
+    size_id: uuid.UUID
+
+    count: int
+
+    class Config:
+        orm_mode = True

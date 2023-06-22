@@ -665,3 +665,13 @@ async def set_size_count(size_id: uuid.UUID, remainder: int, db: AsyncSession):
     await db.commit()
 
     return
+
+
+async def get_cart(user_id: uuid.UUID, db: AsyncSession) -> List[schemas.Cart]:
+    carts = (
+        (await db.execute(select(models.Cart).filter(models.Cart.user_id == user_id)))
+        .scalars()
+        .fetchall()
+    )
+
+    return list(map(schemas.Cart.from_orm, carts))

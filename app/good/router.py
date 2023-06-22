@@ -271,3 +271,11 @@ async def delete_from_cart(
     db: Annotated[AsyncSession, Depends(get_db)],
 ):
     return await service.delete_from_cart(user.id, request.size_id, db)
+
+
+@router.get("/cart", tags=["goods"], response_model=List[schemas.Cart])
+async def get_cart(
+    user: Annotated[AuthUser, Depends(AuthDeps.user_by_token(login_required=True))],
+    db: Annotated[AsyncSession, Depends(get_db)],
+):
+    return await service.get_cart(user.id, db)
