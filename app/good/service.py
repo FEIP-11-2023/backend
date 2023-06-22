@@ -683,4 +683,5 @@ async def delete_good_id(good_id: uuid.UUID, db: AsyncSession):
     if good is None:
         raise exceptions.EntityNotFound(str(good_id))
 
-    (await db.execute(delete(models.Good).filter(models.Good.id == good_id)))
+    await db.execute(delete(models.Good).filter(models.Good.id == good_id))
+    await db.commit()
