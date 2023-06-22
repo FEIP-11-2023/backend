@@ -129,7 +129,7 @@ async def get_sales_by_good_id(
 ) -> List[schemas.Sale]:
     good = (
         await db.execute(
-            select(models.Good).with_for_update().options(selectinload(models.Good.sales)).filter(models.Good.id == id)
+            select(models.Good).with_for_update().options(selectinload(models.Good.sales)).filter(models.Good.id == good_id)
         )
     ).scalars().one_or_none()
     if good is None:
