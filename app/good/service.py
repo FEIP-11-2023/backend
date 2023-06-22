@@ -113,7 +113,7 @@ async def get_good_by_id(id: uuid.UUID, db: AsyncSession) -> Optional[models.Goo
         await db.execute(
             select(models.Good).with_for_update().filter(models.Good.id == id)
         )
-    ).one_or_none()
+    ).scalars().one_or_none()
 
 
 async def get_sale_by_id(id: uuid.UUID, db: AsyncSession) -> Optional[models.Sale]:
