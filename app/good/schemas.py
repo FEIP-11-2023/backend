@@ -97,14 +97,14 @@ class Brand(ORJSONModel):
 
     class Config:
         orm_mode = True
-        
+
 
 class CategoryPhoto(ORJSONModel):
     id: uuid.UUID
     bucket_name: str
     image_name: str
     category_id: uuid.UUID
-    
+
     class Config:
         orm_mode = True
 
@@ -162,3 +162,12 @@ class Good(ORJSONModel):
 
     class Config:
         orm_mode = True
+
+
+class GoodsSearch(ORJSONModel):
+    name: Optional[str] = ""
+    category_ids: Optional[List[uuid.UUID]] = []
+    color_ids: Optional[List[uuid.UUID]] = []
+    brand_ids: Optional[List[uuid.UUID]] = []
+    limit: Optional[int] = 10
+    offset: Optional[int] = 0

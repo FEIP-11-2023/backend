@@ -130,6 +130,7 @@ async def update_category(
 ):
     await service.update_category(request.category_id, request.name, db)
 
+
 @router.patch(
     "/category/photo",
     tags=["goods", "admin"],
@@ -143,6 +144,26 @@ async def add_good_photo(
 ):
     return await service.set_category_photo(
         category_id, await photo.read(), photo.filename.split(".")[-1], db
+    )
+
+
+@router.get(
+    "/goods/search",
+    tags=["goods"],
+    response_model=List[schemas.Good]
+)
+async def search_goods(
+        request: Annotated[schemas.GoodsSearch, Depends()],
+        db: Annotated[AsyncSession, Depends(get_db)]
+):
+    return await service.search_goods(
+        request.name,
+        request.brand_ids,
+        request.color_ids,
+        request.category_ids,
+        request.limit,
+        request.offset,
+        db
     )
 
 

@@ -28,7 +28,9 @@ class Brand(Base, TableNameAndIDMixin):
 class Category(Base, TableNameAndIDMixin):
     name: Mapped[str] = mapped_column(unique=True)
 
-    photo: Mapped[Optional["CategoryPhoto"]] = relationship("CategoryPhoto", uselist=False)
+    photo: Mapped[Optional["CategoryPhoto"]] = relationship(
+        "CategoryPhoto", uselist=False
+    )
 
 
 class Color(Base, TableNameAndIDMixin):

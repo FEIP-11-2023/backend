@@ -188,26 +188,34 @@ async def get_category_by_id(
     id: uuid.UUID, db: AsyncSession
 ) -> Optional[models.Category]:
     return (
-        await db.execute(
-            select(models.Category)
-            .with_for_update()
-            .options(selectinload(models.Category.photo))
-            .filter(models.Category.id == id)
+        (
+            await db.execute(
+                select(models.Category)
+                .with_for_update()
+                .options(selectinload(models.Category.photo))
+                .filter(models.Category.id == id)
+            )
         )
-    ).scalars().one_or_none()
+        .scalars()
+        .one_or_none()
+    )
 
 
 async def get_category_by_name(
     name: str, db: AsyncSession
 ) -> Optional[models.Category]:
     return (
-        await db.execute(
-            select(models.Category)
-            .with_for_update()
-            .options(selectinload(models.Category.photo))
-            .filter(models.Category.name == name)
+        (
+            await db.execute(
+                select(models.Category)
+                .with_for_update()
+                .options(selectinload(models.Category.photo))
+                .filter(models.Category.name == name)
+            )
         )
-    ).scalars().one_or_none()
+        .scalars()
+        .one_or_none()
+    )
 
 
 async def create_category(name: str, db: AsyncSession):
@@ -244,7 +252,11 @@ async def update_category(id: uuid.UUID, name: str, db: AsyncSession):
 
 
 async def get_categories(db: AsyncSession) -> List[schemas.Category]:
-    categories = (await db.execute(select(models.Category).options(selectinload(models.Category.photo)))).fetchall()
+    categories = (
+        await db.execute(
+            select(models.Category).options(selectinload(models.Category.photo))
+        )
+    ).fetchall()
 
     return list(map(lambda x: schemas.Category.from_orm(x[0]), categories))
 
@@ -446,3 +458,37 @@ async def set_category_photo(
     await db.commit()
 
     return id
+
+
+async def search_goods(
+    name: Optional[str],
+    brands: List[uuid.UUID],
+    colors: List[uuid.UUID],
+    categories: List[uuid.UUID],
+    limit: int,
+    offset: int,
+    db: AsyncSession,
+) -> List[schemas.Good]:
+    goods = (await db.execute(
+        select(models.Good)
+        .options(
+                selectinload(models.Good.color),
+                selectinload(models.Good.category),
+                selectinload(models.Good.brand),
+                selectinload(models.Good.sales),
+                selectinload(models.Good.sizes),
+                selectinload(models.Good.photos),
+        )
+        .filter(
+            *[
+                models.Good.brand_id.in_(brands) if len(brands) > 0 else True,
+                models.Good.color_id.in_(colors) if len(colors) > 0 else True,
+                models.Good.category_id.in_(categories) if len(categories) > 0 else True,
+                models.Good.name.ilike(f"%{name}%") if len(name) > 0 else True
+            ]
+        )
+        .offset(offset)
+        .limit(limit)
+    )).scalars().all()
+
+    return list(map(lambda x: schemas.Good.from_orm(x), goods))
