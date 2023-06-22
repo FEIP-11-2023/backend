@@ -127,7 +127,11 @@ async def get_sale_by_id(id: uuid.UUID, db: AsyncSession) -> Optional[models.Sal
 async def get_sales_by_good_id(
     good_id: uuid.UUID, db: AsyncSession
 ) -> List[schemas.Sale]:
-    good = await get_good_by_id(good_id, db)
+    good = (
+        await db.execute(
+            select(models.Good).with_for_update().options(selectinload(models.Good.sales)).filter(models.Good.id == id)
+        )
+    ).scalars().one_or_none()
     if good is None:
         raise exceptions.EntityNotFound(str(good_id))
 
