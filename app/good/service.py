@@ -126,12 +126,12 @@ async def get_sale_by_id(id: uuid.UUID, db: AsyncSession) -> Optional[models.Sal
 
 async def get_sales_by_good_id(
     good_id: uuid.UUID, db: AsyncSession
-) -> List[models.Sale]:
+) -> List[schemas.Sale]:
     good = await get_good_by_id(good_id, db)
     if good is None:
         raise exceptions.EntityNotFound(str(good_id))
 
-    return good.sales
+    return list(map(schemas.Sale.from_orm(), good.sales))
 
 
 async def create_sale(good_id: uuid.UUID, size: int, db: AsyncSession) -> uuid.UUID:
