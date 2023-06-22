@@ -248,7 +248,6 @@ async def add_to_cart(
 async def create_size(
     request: schemas.CreateSize, db: Annotated[AsyncSession, Depends(get_db)]
 ):
-    print(request)
     return await service.create_size(
         request.good_id, request.size, request.remainder, db
     )

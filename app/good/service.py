@@ -581,9 +581,9 @@ async def get_size_by_id(id: uuid.UUID, db: AsyncSession) -> Optional[models.Siz
 async def create_size(
     good_id: uuid.UUID, size: int, remainder: int, db: AsyncSession
 ) -> uuid.UUID:
-    size = await get_size_by_good_id_and_size(good_id, size, db)
+    size_ = await get_size_by_good_id_and_size(good_id, size, db)
 
-    if size is not None:
+    if size_ is not None:
         raise exceptions.DuplicateSize
 
     good = await get_good_by_id(good_id, db)
