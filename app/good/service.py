@@ -194,7 +194,7 @@ async def get_category_by_id(
             .options(selectinload(models.Category.photo))
             .filter(models.Category.id == id)
         )
-    ).one_or_none()
+    ).scalars().one_or_none()
 
 
 async def get_category_by_name(
@@ -207,7 +207,7 @@ async def get_category_by_name(
             .options(selectinload(models.Category.photo))
             .filter(models.Category.name == name)
         )
-    ).one_or_none()
+    ).scalars().one_or_none()
 
 
 async def create_category(name: str, db: AsyncSession):
@@ -228,7 +228,7 @@ async def create_category(name: str, db: AsyncSession):
 
 async def update_category(id: uuid.UUID, name: str, db: AsyncSession):
     category = await get_category_by_name(name, db)
-    if category is not None and category[0].id != id:
+    if category is not None and category.id != id:
         raise exceptions.EntityAlreadyExists
 
     category = await get_category_by_id(id, db)
@@ -236,7 +236,7 @@ async def update_category(id: uuid.UUID, name: str, db: AsyncSession):
     if category is None:
         raise exceptions.EntityNotFound(str(id))
 
-    category[0].name = name
+    category.name = name
 
     await db.commit()
 
