@@ -39,3 +39,12 @@ class SizeIsRequired(ExceptionDescribed):
     code = "GO-0005"
     status_code = 400
     description = {"en": "Size is required", "ru": "Необходимо указать размер"}
+
+
+class DuplicateSize(ExceptionDescribed):
+    code = "GO-0006"
+    status_code = 400
+    description = {
+        "en": "Size already exists for this good",
+        "ru": "Такой размер уже существует для данного товара",
+    }

@@ -544,3 +544,74 @@ async def add_to_cart(
     await db.commit()
 
     return id
+
+
+async def get_size_by_good_id_and_size(
+    good_id: uuid.UUID, size: int, db: AsyncSession
+) -> Optional[models.Size]:
+    size = (
+        (
+            await db.execute(
+                select(models.Size)
+                .filter(models.Size.good_id == good_id, models.Size.size == size)
+                .with_for_update()
+            )
+        )
+        .scalars()
+        .one_or_none()
+    )
+
+    return size
+
+
+async def get_size_by_id(id: uuid.UUID, db: AsyncSession) -> Optional[models.Size]:
+    size = (
+        (
+            await db.execute(
+                select(models.Size).filter(models.Size.id == id).with_for_update()
+            )
+        )
+        .scalars()
+        .one_or_none()
+    )
+
+    return size
+
+
+async def create_size(
+    good_id: uuid.UUID, size: int, remainder: int, db: AsyncSession
+) -> uuid.UUID:
+    size = await get_size_by_good_id_and_size(good_id, size, db)
+
+    if size is not None:
+        raise exceptions.DuplicateSize
+
+    good = await get_good_by_id(good_id, db)
+
+    if good is None:
+        raise exceptions.EntityNotFound(str(good_id))
+
+    new_size = models.Size(good_id=good_id, size=size, remainder=remainder)
+
+    db.add(new_size)
+    await db.flush()
+    await db.refresh(new_size)
+
+    id = new_size.id
+
+    await db.commit()
+
+    return id
+
+
+async def set_size_count(size_id: uuid.UUID, remainder: int, db: AsyncSession):
+    size = await get_size_by_id(size_id, db)
+
+    if size is None:
+        raise exceptions.EntityNotFound(str(size_id))
+
+    size.remainder = remainder
+
+    await db.commit()
+
+    return

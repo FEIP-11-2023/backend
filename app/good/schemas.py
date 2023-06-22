@@ -177,3 +177,14 @@ class AddToCartRequest(ORJSONModel):
     good_id: uuid.UUID
     size_id: uuid.UUID
     count: Optional[int] = 1
+
+
+class CreateSize(ORJSONModel):
+    good_id: uuid.UUID
+    size: int
+    remainder: int
+
+
+class SetSizeRemainder(ORJSONModel):
+    size_id: uuid.UUID
+    remainder: int

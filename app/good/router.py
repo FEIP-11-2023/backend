@@ -230,6 +230,35 @@ async def get_sales(good_id: uuid.UUID, db: Annotated[AsyncSession, Depends(get_
 
 @router.post("/add_to_cart", tags=["goods"], response_model=uuid.UUID)
 async def add_to_cart(
-    request: schemas.AddToCartRequest, user: Annotated[AuthUser, Depends(AuthDeps.user_by_token(login_required=True))], db: Annotated[AsyncSession, Depends(get_db)]
+    request: schemas.AddToCartRequest,
+    user: Annotated[AuthUser, Depends(AuthDeps.user_by_token(login_required=True))],
+    db: Annotated[AsyncSession, Depends(get_db)],
 ):
-    return await service.add_to_cart(user.id, request.good_id, request.size_id, request.count, db)
+    return await service.add_to_cart(
+        user.id, request.good_id, request.size_id, request.count, db
+    )
+
+
+@router.post(
+    "/size",
+    tags=["admin", "goods"],
+    dependencies=[Depends(AuthDeps.admin_required)],
+    response_model=uuid.UUID,
+)
+async def create_size(
+    request: schemas.CreateSize, db: Annotated[AsyncSession, Depends(get_db)]
+):
+    return await service.create_size(
+        request.good_id, request.size, request.remainder, db
+    )
+
+
+@router.post(
+    "/size/set",
+    tags=["admin", "goods"],
+    dependencies=[Depends(AuthDeps.admin_required)],
+)
+async def set_remainder(
+    request: schemas.SetSizeRemainder, db: Annotated[AsyncSession, Depends(get_db)]
+):
+    await service.set_size_count(request.size_id, request.remainder, db)
