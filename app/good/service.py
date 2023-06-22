@@ -412,7 +412,7 @@ async def add_photo(
 async def set_category_photo(
     category_id: uuid.UUID, photo: bytes, extension: str, db: AsyncSession
 ) -> uuid.UUID:
-    category = await get_category_by_id(id, db)
+    category = await get_category_by_id(category_id, db)
 
     if category is None:
         raise exceptions.EntityNotFound(str(category_id))
