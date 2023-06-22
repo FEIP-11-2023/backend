@@ -154,7 +154,7 @@ async def add_good_photo(
     )
 
 
-@router.get("/goods/search", tags=["goods"], response_model=List[schemas.Good])
+@router.get("/good/search", tags=["goods"], response_model=List[schemas.Good])
 async def search_goods(
     db: Annotated[AsyncSession, Depends(get_db)],
     name: Annotated[Optional[str], Query()] = "",
