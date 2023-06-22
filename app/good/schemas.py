@@ -140,7 +140,7 @@ class GoodPhoto(ORJSONModel):
 
 class Size(ORJSONModel):
     id: uuid.UUID
-    remaining: int
+    remainder: int
     size: int
     good_id: uuid.UUID
 
