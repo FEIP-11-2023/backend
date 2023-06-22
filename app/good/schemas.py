@@ -97,12 +97,19 @@ class Brand(ORJSONModel):
 
     class Config:
         orm_mode = True
+        
+
+class CategoryPhoto(ORJSONModel):
+    id: uuid.UUID
+    bucket_name: str
+    image_name: str
+    category_id: uuid.UUID
 
 
 class Category(ORJSONModel):
     id: uuid.UUID
     name: str
-    photo: Optional["Photo"]
+    photo: Optional[CategoryPhoto]
 
     class Config:
         orm_mode = True
@@ -118,7 +125,7 @@ class Sale(ORJSONModel):
         orm_mode = True
 
 
-class Photo(ORJSONModel):
+class GoodPhoto(ORJSONModel):
     id: uuid.UUID
     bucket_name: str
     image_name: str
@@ -145,7 +152,7 @@ class Good(ORJSONModel):
     category: Category
     cost: decimal.Decimal
     sales: Optional[List[Sale]] = []
-    photos: Optional[List[Photo]] = []
+    photos: Optional[List[GoodPhoto]] = []
     color: Optional[Color]
     sizes: Optional[List[Size]]
     brand: Brand
