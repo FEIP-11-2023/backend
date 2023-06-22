@@ -73,7 +73,7 @@ class Size(Base, TableNameAndIDMixin):
 
 
 class GoodPhoto(Base, TableNameAndIDMixin, CreatedAtMixin):
-    good_id: Mapped[uuid.UUID] = mapped_column(ForeignKey(Good.id))
+    good_id: Mapped[uuid.UUID] = mapped_column(ForeignKey(Good.id, ondelete="CASCADE"))
     bucket_name: Mapped[str] = mapped_column(default="good-photos")
     image_name: Mapped[str]
 
@@ -87,7 +87,7 @@ class CategoryPhoto(Base, TableNameAndIDMixin):
 class Cart(Base, TableNameAndIDMixin):
     user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey(User.id))
 
-    good_id: Mapped[uuid.UUID] = mapped_column(ForeignKey(Good.id))
+    good_id: Mapped[uuid.UUID] = mapped_column(ForeignKey(Good.id, ondelete="CASCADE"))
     size_id: Mapped[Optional[uuid.UUID]] = mapped_column(ForeignKey(Size.id))
 
     good: Mapped[Good] = relationship(Good)
