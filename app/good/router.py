@@ -1,6 +1,6 @@
 import uuid
-from typing import Annotated, List
-from fastapi import APIRouter, Depends, Form, File, UploadFile
+from typing import Annotated, List, Optional
+from fastapi import APIRouter, Depends, Form, File, UploadFile, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
@@ -153,16 +153,21 @@ async def add_good_photo(
     response_model=List[schemas.Good]
 )
 async def search_goods(
-        request: Annotated[schemas.GoodsSearch, Depends()],
+        name: Annotated[Optional[str], Query("")],
+        brand_ids: Annotated[Optional[List[uuid.UUID]], Query([])],
+        color_ids: Annotated[Optional[List[uuid.UUID]], Query([])],
+        category_ids: Annotated[Optional[List[uuid.UUID]], Query([])],
+        limit: Annotated[Optional[int], Query(10)],
+        offset: Annotated[Optional[int], Query(0)],
         db: Annotated[AsyncSession, Depends(get_db)]
 ):
     return await service.search_goods(
-        request.name,
-        request.brand_ids,
-        request.color_ids,
-        request.category_ids,
-        request.limit,
-        request.offset,
+        name,
+        brand_ids,
+        color_ids,
+        category_ids,
+        limit,
+        offset,
         db
     )
 
