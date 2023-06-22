@@ -675,3 +675,12 @@ async def get_cart(user_id: uuid.UUID, db: AsyncSession) -> List[schemas.Cart]:
     )
 
     return list(map(schemas.Cart.from_orm, carts))
+
+
+async def delete_good_id(good_id: uuid.UUID, db: AsyncSession):
+    good = await get_good_by_id(good_id, db)
+
+    if good is None:
+        raise exceptions.EntityNotFound(str(good_id))
+
+    (await db.execute(delete(models.Good).filter(models.Good.id == good_id)))

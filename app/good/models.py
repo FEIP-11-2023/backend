@@ -53,16 +53,17 @@ class Good(Base, TableNameAndIDMixin, CreatedAtMixin, UpdatedAtMixin):
 
     sizes: Mapped[List["Size"]] = relationship("Size", back_populates="good")
     photos: Mapped[List["GoodPhoto"]] = relationship("GoodPhoto")
+    carts: Mapped[List["Cart"]] = relationship("Cart")
 
 
 class Sale(Base, TableNameAndIDMixin, CreatedAtMixin, UpdatedAtMixin):
-    good_id: Mapped[UUID] = mapped_column(ForeignKey(Good.id))
+    good_id: Mapped[UUID] = mapped_column(ForeignKey(Good.id, ondelete="CASCADE"))
     size: Mapped[int]
     active: Mapped[bool] = mapped_column(default=True)
 
 
 class Size(Base, TableNameAndIDMixin):
-    good_id: Mapped[UUID] = mapped_column(ForeignKey(Good.id))
+    good_id: Mapped[UUID] = mapped_column(ForeignKey(Good.id, ondelete="CASCADE"))
     size: Mapped[int] = mapped_column()
     remainder: Mapped[int]
 
@@ -89,6 +90,6 @@ class Cart(Base, TableNameAndIDMixin):
     good_id: Mapped[uuid.UUID] = mapped_column(ForeignKey(Good.id))
     size_id: Mapped[Optional[uuid.UUID]] = mapped_column(ForeignKey(Size.id))
 
-    good: Mapped[Good] = relationship(Good, cascade="all,delete")
+    good: Mapped[Good] = relationship(Good)
 
     count: Mapped[int] = mapped_column(default=1)

@@ -59,7 +59,7 @@ async def update_good(
     "/good", dependencies=[Depends(AuthDeps.admin_required)], tags=["goods", "admin"]
 )
 async def delete_good(good_id: uuid.UUID, db: Annotated[AsyncSession, Depends(get_db)]):
-    return await service.delete()
+    return await service.delete_good_id(good_id, db)
 
 
 @router.post(
