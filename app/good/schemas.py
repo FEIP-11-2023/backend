@@ -179,6 +179,11 @@ class AddToCartRequest(ORJSONModel):
     count: Optional[int] = 1
 
 
+class DeleteFromCartRequest(ORJSONModel):
+    good_id: uuid.UUID
+    size_id: uuid.UUID
+
+
 class CreateSize(ORJSONModel):
     good_id: uuid.UUID
     size: int

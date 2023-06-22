@@ -228,7 +228,7 @@ async def get_sales(good_id: uuid.UUID, db: Annotated[AsyncSession, Depends(get_
     return await service.get_sales_by_good_id(good_id, db)
 
 
-@router.post("/add_to_cart", tags=["goods"], response_model=uuid.UUID)
+@router.post("/cart", tags=["goods"], response_model=uuid.UUID)
 async def add_to_cart(
     request: schemas.AddToCartRequest,
     user: Annotated[AuthUser, Depends(AuthDeps.user_by_token(login_required=True))],
@@ -262,3 +262,12 @@ async def set_remainder(
     request: schemas.SetSizeRemainder, db: Annotated[AsyncSession, Depends(get_db)]
 ):
     await service.set_size_count(request.size_id, request.remainder, db)
+
+
+@router.delete("/cart", tags=["goods"], response_model=uuid.UUID)
+async def delete_from_cart(
+    request: schemas.DeleteFromCartRequest,
+    user: Annotated[AuthUser, Depends(AuthDeps.user_by_token(login_required=True))],
+    db: Annotated[AsyncSession, Depends(get_db)],
+):
+    return await service.delete_from_cart(user.id, request.size_id, db)

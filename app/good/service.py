@@ -5,7 +5,7 @@ import uuid
 from typing import Optional, List
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from sqlalchemy.orm import selectinload, joinedload
 
 from app.good import models, schemas
@@ -553,30 +553,47 @@ async def add_to_cart(
         raise exceptions.EntityNotFound(str(size_id))
 
     cart = await get_cart_by_user_size(user_id, size_id, db)
-    
-    if cart is None:
 
+    if cart is None:
         new_cart = models.Cart(
             good_id=good_id, size_id=size_id, count=count, user_id=user_id
         )
-    
+
         db.add(new_cart)
         await db.flush()
         await db.refresh(new_cart)
-    
+
         id = new_cart.id
-    
+
         await db.commit()
-    
+
         return id
     else:
         cart.count += count
-        
+
         id = cart.id
-        
+
         await db.commit()
-        
+
         return id
+
+
+async def delete_from_cart(
+    user_id: uuid.UUID,
+    size_id: Optional[uuid.UUID],
+    db: AsyncSession,
+):
+    cart = await get_cart_by_user_size(user_id, size_id, db)
+
+    if cart is None:
+        raise exceptions.EntityNotFound(f"{str(size_id), str(user_id)}")
+    else:
+        cart.count -= 1
+
+        if cart.count == 0:
+            await db.execute(delete(models.Cart).filter(models.Cart.id == cart.id))
+
+        await db.commit()
 
 
 async def get_size_by_good_id_and_size(
