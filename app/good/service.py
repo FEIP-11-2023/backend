@@ -244,7 +244,7 @@ async def update_category(id: uuid.UUID, name: str, db: AsyncSession):
 
 
 async def get_categories(db: AsyncSession) -> List[schemas.Category]:
-    categories = (await db.execute(select(models.Category))).fetchall()
+    categories = (await db.execute(select(models.Category).options(selectinload(models.Category.photo)))).fetchall()
 
     return list(map(lambda x: schemas.Category.from_orm(x[0]), categories))
 
