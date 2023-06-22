@@ -112,7 +112,9 @@ async def get_good_by_id(id: uuid.UUID, db: AsyncSession) -> Optional[models.Goo
     return (
         (
             await db.execute(
-                select(models.Good).with_for_update().filter(models.Good.id == id)
+                select(models.Good).options(
+                    selectinload(models.Good.sizes)
+                ).with_for_update().filter(models.Good.id == id)
             )
         )
         .scalars()
